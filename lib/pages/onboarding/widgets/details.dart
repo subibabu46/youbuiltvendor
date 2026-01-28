@@ -1,3 +1,4 @@
+import 'package:design_task_1/pages/get_started/get_started_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/description.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +81,12 @@ class _DetailsState extends State<Details> {
                   duration: Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
                 );
+                if (pageController.page == 2) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GetStartedScreen()),
+                  );
+                }
               },
             ),
           ),

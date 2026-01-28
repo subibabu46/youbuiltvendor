@@ -10,6 +10,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: ThemeData(), home: SplashScreen());
+    return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Urbanist',
+        textTheme: ThemeData.light().textTheme.copyWith(
+          bodySmall: TextStyle(fontFamily: 'Urbanist'),
+          bodyMedium: TextStyle(fontFamily: 'Urbanist'),
+          bodyLarge: TextStyle(fontFamily: 'Urbanist'),
+        ),
+      ),
+      home: SplashScreen(),
+    );
   }
 }

@@ -1,5 +1,8 @@
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
+import 'package:design_task_1/pages/registration/register_now_address_location.dart';
+import 'package:design_task_1/pages/registration/widgets/input_number.dart';
 import 'package:design_task_1/pages/registration/widgets/input_text.dart';
+import 'package:design_task_1/pages/registration/widgets/sub_title_bubbles.dart';
 import 'package:flutter/material.dart';
 
 class RegisterNowBasicInfo extends StatelessWidget {
@@ -25,26 +28,35 @@ class RegisterNowBasicInfo extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 8),
-                Text(
-                  'Basic Info',
-                  style: TextStyle(
-                    color: Color(0xff737373),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                  ),
+                SubTitleBubbles(isEnable2: false),
+                SizedBox(height: 40),
+                InputText(controller: controller, label: 'Business Name'),
+                InputText(controller: controller, label: 'Owner Name'),
+                InputText(controller: controller, label: 'Business Email'),
+                InputText(controller: controller, label: 'Owner Email'),
+                InputNumber(
+                  controller: controller,
+                  label: 'Company Official Number',
+                  isRequired: false,
                 ),
-                SizedBox(height: 8),
-                InputText(controller: controller, hintText: 'Address 1'),
-                InputText(controller: controller, hintText: 'Address 2'),
-                InputText(controller: controller, hintText: 'Location'),
-
-                InputText(controller: controller, hintText: 'Country'),
-                InputText(controller: controller, hintText: 'Pin Code'),
-                InputText(controller: controller, hintText: 'State'),
-                InputText(controller: controller, hintText: 'District'),
-
+                InputNumber(controller: controller, label: 'Phone Number'),
+                InputText(controller: controller, label: 'Company PAN Number'),
+                InputText(controller: controller, label: 'Owner PAN Number'),
+                InputText(controller: controller, label: 'GST Number'),
+                InputText(controller: controller, label: 'Owner ID Number'),
+                InputText(controller: controller, label: 'Owner ID Number'),
                 SizedBox(height: 80),
-                NextButton(buttonText: 'Confirm', onPressed: () {}),
+                NextButton(
+                  buttonText: 'Next',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RegisterNowAddressLocation(),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),

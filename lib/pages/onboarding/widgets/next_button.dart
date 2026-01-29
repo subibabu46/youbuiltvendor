@@ -25,7 +25,7 @@ class NextButton extends StatelessWidget {
           buttonText,
           style: TextStyle(
             color: Colors.white,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             fontSize: 16,
           ),
           textAlign: TextAlign.center,

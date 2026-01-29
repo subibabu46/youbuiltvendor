@@ -32,8 +32,8 @@ class _SplashScreenState extends State<SplashScreen> {
           Spacer(flex: 2),
           Image.asset('assets/Final_web 2.png', width: 220, height: 220),
           Text(
-            'Construction As A Service',
-            style: TextStyle(fontWeight: FontWeight.w600),
+            'VENDOR',
+            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
           ),
           Spacer(),
           SizedBox(

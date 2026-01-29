@@ -1,12 +1,10 @@
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/registration/register_now_documents.dart';
-import 'package:design_task_1/pages/registration/widgets/input_select.dart';
-import 'package:design_task_1/pages/registration/widgets/input_text.dart';
 import 'package:design_task_1/pages/registration/widgets/sub_title_bubbles.dart';
+import 'package:design_task_1/pages/registration/widgets/upload_file.dart';
 import 'package:flutter/material.dart';
 
-class RegisterNowAddressLocation extends StatelessWidget {
-  const RegisterNowAddressLocation({super.key});
+class RegisterNowDocuments extends StatelessWidget {
+  const RegisterNowDocuments({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,27 +29,15 @@ class RegisterNowAddressLocation extends StatelessWidget {
                 SizedBox(height: 8),
                 SubTitleBubbles(isEnable2: true),
                 SizedBox(height: 40),
-                InputText(controller: controller, label: 'Address 1'),
-                InputText(controller: controller, label: 'Address 2'),
-                InputText(controller: controller, label: 'Location'),
+                UploadFile(controller: controller, label: 'Business Logo'),
+                UploadFile(controller: controller, label: 'Company PAN Card'),
+                UploadFile(controller: controller, label: 'Owner PAN Card'),
 
-                InputSelect(label: 'Country'),
-                InputText(controller: controller, label: 'Pin Code'),
-                InputSelect(label: 'State'),
-                InputSelect(label: 'District'),
+                UploadFile(controller: controller, label: 'Owner ID Card'),
+                UploadFile(controller: controller, label: 'GST Certificate'),
 
                 SizedBox(height: 24),
-                NextButton(
-                  buttonText: 'Next',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RegisterNowDocuments(),
-                      ),
-                    );
-                  },
-                ),
+                NextButton(buttonText: 'Confirm', onPressed: () {}),
                 SizedBox(height: 24),
               ],
             ),

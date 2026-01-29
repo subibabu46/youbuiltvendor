@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class InputSelect extends StatelessWidget {
   const InputSelect({
     super.key,
-    required this.hintText,
+    this.hintText,
+    required this.label,
     this.isRequired = true,
   });
 
-  final String hintText;
+  final String? hintText;
+  final String label;
   final bool isRequired;
 
   @override
@@ -21,7 +23,7 @@ class InputSelect extends StatelessWidget {
             TextSpan(
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
               children: [
-                TextSpan(text: hintText),
+                TextSpan(text: label),
                 isRequired
                     ? TextSpan(
                         text: '*',
@@ -50,7 +52,7 @@ class InputSelect extends StatelessWidget {
                 ),
                 isExpanded: true,
                 underline: SizedBox(),
-                value: 'Select details',
+                value: hintText ?? 'Select details',
                 items: ['Select details', '', ''].map((code) {
                   return DropdownMenuItem(value: code, child: Text(code));
                 }).toList(),

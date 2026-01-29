@@ -1,11 +1,9 @@
 import 'package:design_task_1/pages/get_started/widgets/register_button.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/registration/register_now_screen.dart';
+import 'package:design_task_1/pages/store_registration/store_registration_screen.dart';
 import 'package:flutter/material.dart';
 
 enum BusinessType { store, service }
-
-BusinessType? selectedType;
 
 class GetStartedScreen extends StatefulWidget {
   const GetStartedScreen({super.key});
@@ -15,7 +13,7 @@ class GetStartedScreen extends StatefulWidget {
 }
 
 class _GetStartedScreenState extends State<GetStartedScreen> {
-  bool isPressed = false;
+  BusinessType? selectedType;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,12 +72,35 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
               NextButton(
                 buttonText: 'Get Started',
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RegisterNowScreen(),
-                    ),
-                  );
+                  if (selectedType == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Please choose one to continue",
+                          style: TextStyle(color: Color(0xffffffff)),
+                        ),
+                        duration: Duration(seconds: 2),
+                        backgroundColor: Color(0xff737373),
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 80,
+                        ),
+                      ),
+                    );
+                    return;
+                  }
+                  if (selectedType == BusinessType.store) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StoreRegistrationScreen(),
+                      ),
+                    );
+                  } else {}
                 },
               ),
             ],

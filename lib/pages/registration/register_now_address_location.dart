@@ -1,7 +1,8 @@
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/registration/register_now_basic_info.dart';
+import 'package:design_task_1/pages/registration/register_now_documents.dart';
 import 'package:design_task_1/pages/registration/widgets/input_select.dart';
 import 'package:design_task_1/pages/registration/widgets/input_text.dart';
+import 'package:design_task_1/pages/registration/widgets/sub_title_bubbles.dart';
 import 'package:flutter/material.dart';
 
 class RegisterNowAddressLocation extends StatelessWidget {
@@ -14,10 +15,11 @@ class RegisterNowAddressLocation extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 50),
                 Text(
                   'Registration',
                   style: TextStyle(
@@ -27,32 +29,25 @@ class RegisterNowAddressLocation extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 8),
-                Text(
-                  'Address & Location',
-                  style: TextStyle(
-                    color: Color(0xff737373),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                  ),
-                ),
-                SizedBox(height: 8),
-                InputText(controller: controller, hintText: 'Address 1'),
-                InputText(controller: controller, hintText: 'Address 2'),
-                InputText(controller: controller, hintText: 'Location'),
+                SubTitleBubbles(isEnable2: true),
+                SizedBox(height: 40),
+                InputText(controller: controller, label: 'Address 1'),
+                InputText(controller: controller, label: 'Address 2'),
+                InputText(controller: controller, label: 'Location'),
 
-                InputSelect(hintText: 'Country'),
-                InputText(controller: controller, hintText: 'Pin Code'),
-                InputSelect(hintText: 'State'),
-                InputSelect(hintText: 'District'),
+                InputSelect(label: 'Country'),
+                InputText(controller: controller, label: 'Pin Code'),
+                InputSelect(label: 'State'),
+                InputSelect(label: 'District'),
 
-                SizedBox(height: 80),
+                SizedBox(height: 24),
                 NextButton(
                   buttonText: 'Next',
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => RegisterNowBasicInfo(),
+                        builder: (context) => RegisterNowDocuments(),
                       ),
                     );
                   },

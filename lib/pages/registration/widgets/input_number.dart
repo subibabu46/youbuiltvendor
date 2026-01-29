@@ -4,12 +4,14 @@ class InputNumber extends StatelessWidget {
   const InputNumber({
     super.key,
     required this.controller,
-    required this.hintText,
+    this.hintText,
+    required this.label,
     this.isRequired = true,
   });
 
   final TextEditingController controller;
-  final String hintText;
+  final String? hintText;
+  final String label;
   final bool isRequired;
 
   @override
@@ -23,7 +25,7 @@ class InputNumber extends StatelessWidget {
             TextSpan(
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
               children: [
-                TextSpan(text: hintText),
+                TextSpan(text: label),
                 isRequired
                     ? TextSpan(
                         text: '*',
@@ -62,7 +64,7 @@ class InputNumber extends StatelessWidget {
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Enter details',
+                        hintText: hintText ?? 'Enter details',
                         hintStyle: TextStyle(
                           color: Color(0xffa3a3a3),
                           fontSize: 14,

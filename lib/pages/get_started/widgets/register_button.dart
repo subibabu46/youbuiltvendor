@@ -26,7 +26,9 @@ class RegisterButton extends StatelessWidget {
         width: 361,
         height: 108,
         decoration: BoxDecoration(
-          border: Border.all(color: isPressed ? Colors.red : Colors.grey),
+          border: Border.all(
+            color: isPressed ? Color(0xffFF3B30) : Color(0xffD1D5DB),
+          ),
           borderRadius: BorderRadius.circular(10),
         ),
 

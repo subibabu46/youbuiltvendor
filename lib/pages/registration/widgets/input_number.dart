@@ -1,21 +1,38 @@
+import 'package:design_task_1/providers/country_code_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class InputNumber extends StatelessWidget {
+class InputNumber extends ConsumerStatefulWidget {
+  final TextEditingController controller;
+  final String? hintText;
+  final String label;
+  final bool isRequired;
+  final void Function(String)? onCountryCodeChanged;
+
   const InputNumber({
     super.key,
     required this.controller,
     this.hintText,
     required this.label,
     this.isRequired = true,
+    this.onCountryCodeChanged,
   });
 
-  final TextEditingController controller;
-  final String? hintText;
-  final String label;
-  final bool isRequired;
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _InputNumberState();
+}
 
+class _InputNumberState extends ConsumerState<InputNumber> {
+  String? selectedValue = '+91';
   @override
   Widget build(BuildContext context) {
+    final label = widget.label;
+    final controller = widget.controller;
+    final hintText = widget.hintText;
+    final isRequired = widget.isRequired;
+
+    final countryCodesAsync = ref.watch(countryCodesProvider);
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -47,14 +64,34 @@ class InputNumber extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 children: [
-                  DropdownButton<String>(
-                    underline: SizedBox(),
-                    value: '+91',
-                    items: ['+1', '+91', '+44'].map((code) {
-                      return DropdownMenuItem(value: code, child: Text(code));
-                    }).toList(),
-                    onChanged: (value) {},
+                  countryCodesAsync.when(
+                    data: (codes) {
+                      return DropdownButton<String>(
+                        underline: SizedBox(),
+                        value: selectedValue,
+                        items: codes.map((code) {
+                          return DropdownMenuItem(
+                            value: code.label,
+                            child: Text(code.label),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedValue = value;
+                          });
+                          if (value != null &&
+                              widget.onCountryCodeChanged != null) {
+                            widget.onCountryCodeChanged!(value);
+                          }
+                        },
+                      );
+                    },
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) =>
+                        Center(child: Text(error.toString())),
                   ),
+
                   SizedBox(width: 8),
                   Container(width: 1, height: 24, color: Color(0xffe0e0e0)),
                   SizedBox(width: 8),

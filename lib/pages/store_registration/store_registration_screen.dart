@@ -1,15 +1,21 @@
+import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/registration/widgets/input_number.dart';
 import 'package:design_task_1/pages/registration/widgets/input_text.dart';
 import 'package:design_task_1/pages/store_registration/otp_verification.dart';
+import 'package:design_task_1/providers/register_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StoreRegistrationScreen extends StatelessWidget {
+class StoreRegistrationScreen extends ConsumerWidget {
   const StoreRegistrationScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     TextEditingController controller = TextEditingController();
+    TextEditingController numberController = TextEditingController();
+    String selectedCountryCode = '+91';
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -41,9 +47,12 @@ class StoreRegistrationScreen extends StatelessWidget {
                 hintText: 'Enter full name',
               ),
               InputNumber(
-                controller: controller,
+                controller: numberController,
                 label: 'Phone Number',
                 hintText: 'Enter number',
+                onCountryCodeChanged: (code) {
+                  selectedCountryCode = code;
+                },
               ),
 
               SizedBox(height: 80),
@@ -77,13 +86,24 @@ class StoreRegistrationScreen extends StatelessWidget {
                   SizedBox(height: 24),
                   NextButton(
                     buttonText: 'Submit',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => OtpVerification(),
-                        ),
+                    onPressed: () async {
+                      final userInfo = UserModel(
+                        phoneNumber: numberController.text,
+                        name: controller.text,
+                        code: selectedCountryCode,
+                        type: "store",
                       );
+                      final result = await ref.read(registerProvider(userInfo));
+                      if (context.mounted) {
+                        result
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OtpVerification(),
+                                ),
+                              )
+                            : '';
+                      }
                     },
                   ),
                 ],

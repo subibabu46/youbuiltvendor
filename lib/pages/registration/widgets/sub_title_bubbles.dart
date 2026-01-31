@@ -8,106 +8,78 @@ class SubTitleBubbles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            SizedBox(width: 10),
-            CircleAvatar(
-              backgroundColor: Color(0xff0d0d0d),
-
-              radius: 20,
-              child: Text(
-                '1',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            SizedBox(width: 8),
-            Container(
-              width: 100,
-              height: 3,
-              decoration: BoxDecoration(
-                color: Colors.black,
-
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            SizedBox(width: 8),
-            CircleAvatar(
-              backgroundColor: isEnable2
-                  ? Color(0xff0d0d0d)
-                  : Color(0xfff4f4f4),
-              radius: 20,
-              child: Text(
-                '2',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: isEnable2 ? Colors.white : Color(0xff737373),
-                ),
-              ),
-            ),
-            SizedBox(width: 8),
-            Container(
-              width: 100,
-              height: 3,
-              decoration: BoxDecoration(
-                color: Color(0xffd1d5db),
-
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            SizedBox(width: 8),
-            CircleAvatar(
-              backgroundColor: Color(0xfff4f4f4),
-              radius: 20,
-              child: Text(
-                '3',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: Color(0xff737373),
-                ),
-              ),
-            ),
+            _circle('1', true),
+            _line(active: true),
+            _circle('2', isEnable2),
+            _line(active: false),
+            _circle('3', false),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Basic Info',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: Color(0xff0d0d0d),
-                ),
-              ),
-              Text(
-                'Address & Location',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: isEnable2 ? Color(0xff0d0d0d) : Color(0xff737373),
-                ),
-              ),
-              Text(
-                'Documents',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: Color(0xff737373),
-                ),
-              ),
-            ],
-          ),
+
+        const SizedBox(height: 8),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _stepText('Basic Info', Color(0xff0d0d0d)),
+
+            _stepText(
+              'Address & Location',
+              isEnable2 ? Color(0xff0d0d0d) : Color(0xff737373),
+            ),
+
+            _stepText('Documents', Color(0xff737373)),
+          ],
         ),
       ],
+    );
+  }
+
+  Widget _circle(String text, bool enabled) {
+    return SizedBox(
+      width: 60,
+      child: Center(
+        child: CircleAvatar(
+          radius: 20,
+          backgroundColor: enabled
+              ? const Color(0xff0d0d0d)
+              : const Color(0xfff4f4f4),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: enabled ? Colors.white : const Color(0xff737373),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _line({required bool active}) {
+    return Expanded(
+      child: Container(
+        height: 3,
+        decoration: BoxDecoration(
+          color: active ? Colors.black : const Color(0xffd1d5db),
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
+
+  static Widget _stepText(String text, Color color) {
+    return Text(
+      text,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: color),
     );
   }
 }

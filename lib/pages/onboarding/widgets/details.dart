@@ -1,8 +1,5 @@
-import 'package:design_task_1/pages/get_started/get_started_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/description.dart';
-import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 const items = [
   [
@@ -23,75 +20,35 @@ const items = [
 ];
 
 class Details extends StatefulWidget {
-  const Details({super.key});
+  final PageController pageController;
+  const Details({super.key, required this.pageController});
 
   @override
   State<Details> createState() => _DetailsState();
 }
 
 class _DetailsState extends State<Details> {
-  PageController pageController = PageController();
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        PageView.builder(
-          controller: pageController,
-          itemCount: items.length,
-          itemBuilder: (context, i) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: Image.asset(items[i][0], fit: BoxFit.contain),
-              ),
-              SizedBox(height: 50),
-              Description(title: items[i][1], content: items[i][2]),
-              SizedBox(height: 50),
-            ],
-          ),
-        ),
-        Positioned(
-          bottom: 92,
-          right: MediaQuery.of(context).size.width / 2 - 20,
+    return PageView.builder(
+      controller: widget.pageController,
+      itemCount: items.length,
+      itemBuilder: (context, i) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
 
-          child: SmoothPageIndicator(
-            controller: pageController,
-            count: items.length,
-            effect: WormEffect(
-              dotHeight: 8,
-              dotWidth: 8,
-              spacing: 8,
-              activeDotColor: Color(0xFF000000),
-              dotColor: Color(0xFFD9D9D9),
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: double.infinity,
+              child: Image.asset(items[i][0], fit: BoxFit.contain),
             ),
           ),
-        ),
-        Positioned(
-          bottom: -8,
-          right: 8,
-          left: 8,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            child: NextButton(
-              buttonText: 'Next',
-              onPressed: () {
-                pageController.nextPage(
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
-                if (pageController.page == 2) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => GetStartedScreen()),
-                  );
-                }
-              },
-            ),
-          ),
-        ),
-      ],
+
+          Description(title: items[i][1], content: items[i][2]),
+          SizedBox(height: 40),
+        ],
+      ),
     );
   }
 }

@@ -65,119 +65,121 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
             height: MediaQuery.of(context).size.height,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'OTP \nVerification',
-                    style: TextStyle(
-                      color: Color(0xff2c2c2c),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 32,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'OTP \nVerification',
+                      style: TextStyle(
+                        color: Color(0xff2c2c2c),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 32,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Enter OTP sent to your registered mobile number',
-                    style: TextStyle(
-                      color: Color(0xff737373),
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
+                    SizedBox(height: 8),
+                    Text(
+                      'Enter OTP sent to your registered mobile number',
+                      style: TextStyle(
+                        color: Color(0xff737373),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 24),
+                    SizedBox(height: 24),
 
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Pinput(
-                          length: 4,
-                          onCompleted: (pin) {
-                            otp = pin;
-                          },
-                          separatorBuilder: (index) =>
-                              const SizedBox(width: 20),
-                          defaultPinTheme: PinTheme(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            width: 56,
-                            height: 56,
-                            textStyle: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Color(0xffa3a3a3)),
-                              borderRadius: BorderRadius.circular(8),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Pinput(
+                            length: 4,
+                            onCompleted: (pin) {
+                              otp = pin;
+                            },
+                            separatorBuilder: (index) =>
+                                const SizedBox(width: 20),
+                            defaultPinTheme: PinTheme(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              width: 56,
+                              height: 56,
+                              textStyle: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Color(0xffa3a3a3)),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 24),
-                        Text.rich(
-                          TextSpan(
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: _secondsLeft > 0
-                                    ? 'Resend OTP in $_secondsLeft s'
-                                    : 'Didn’t receive code? ',
-                                style: TextStyle(color: Color(0xffa3a3a3)),
+                          SizedBox(height: 24),
+                          Text.rich(
+                            TextSpan(
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
                               ),
-                              TextSpan(
-                                text: _secondsLeft > 0 ? '' : 'Resend',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.red,
+                              children: [
+                                TextSpan(
+                                  text: _secondsLeft > 0
+                                      ? 'Resend OTP in $_secondsLeft s'
+                                      : 'Didn’t receive code? ',
+                                  style: TextStyle(color: Color(0xffa3a3a3)),
                                 ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () async {
-                                    if (_secondsLeft == 0) {
-                                      userInfo = UserModel(
-                                        phoneNumber: userInfo.phoneNumber,
-                                        name: userInfo.name,
-                                        code: userInfo.code,
-                                        type: userInfo.type,
-                                      );
-                                      final result = await ref.read(
-                                        registerProvider(userInfo),
-                                      );
-                                      _startTimer();
+                                TextSpan(
+                                  text: _secondsLeft > 0 ? '' : 'Resend',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Colors.red,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () async {
+                                      if (_secondsLeft == 0) {
+                                        userInfo = UserModel(
+                                          phoneNumber: userInfo.phoneNumber,
+                                          name: userInfo.name,
+                                          code: userInfo.code,
+                                          type: userInfo.type,
+                                        );
+                                        final result = await ref.read(
+                                          registerProvider(userInfo),
+                                        );
+                                        _startTimer();
 
-                                      if (context.mounted) {
-                                        if (result) {
-                                          messageTost(
-                                            'OTP sent successfully..',
-                                            context,
-                                          );
-                                        } else {
-                                          messageTost(
-                                            'Something went wrong',
-                                            context,
-                                          );
+                                        if (context.mounted) {
+                                          if (result) {
+                                            messageTost(
+                                              'OTP sent successfully..',
+                                              context,
+                                            );
+                                          } else {
+                                            messageTost(
+                                              'Something went wrong',
+                                              context,
+                                            );
+                                          }
                                         }
                                       }
-                                    }
-                                  },
-                              ),
-                            ],
+                                    },
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 40, left: 16, right: 16),
+        padding: const EdgeInsets.only(bottom: 64, left: 16, right: 16),
         child: NextButton(
           buttonText: 'Verify',
           onPressed: () async {

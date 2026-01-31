@@ -23,7 +23,7 @@ class RegisterButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: 361,
+        width: MediaQuery.of(context).size.width,
         height: 108,
         decoration: BoxDecoration(
           border: Border.all(
@@ -63,7 +63,9 @@ class RegisterButton extends StatelessWidget {
                 ],
               ),
 
-              Image.asset(image, width: width, height: height),
+              Flexible(
+                child: Image.asset(image, width: width, height: height),
+              ),
             ],
           ),
         ),

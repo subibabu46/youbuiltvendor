@@ -53,7 +53,7 @@ class _RegisterNowDocumentsState extends State<RegisterNowDocuments> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 40, left: 16, right: 16),
+        padding: const EdgeInsets.only(bottom: 64, left: 16, right: 16),
         child: NextButton(buttonText: 'Confirm', onPressed: () {}),
       ),
     );

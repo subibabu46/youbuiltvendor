@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:design_task_1/models/country_code.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/user_model.dart';
@@ -21,7 +19,6 @@ class StoreRepository {
         final countryCodes = countryCodesJson
             .map((e) => CountryCode.fromJson(e))
             .toList();
-        log(countryCodes.toString());
         return countryCodes;
       }
 

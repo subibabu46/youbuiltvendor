@@ -37,4 +37,14 @@ class StoreService {
       rethrow;
     }
   }
+
+  Future<Response> re(Map<String, dynamic> data) async {
+    try {
+      final response = await dio.post("/api/users/verifyOtp", data: data);
+
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

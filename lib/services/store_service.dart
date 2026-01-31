@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 
 class StoreService {
@@ -13,21 +11,29 @@ class StoreService {
   Future<Response> fetchCountryCodes() async {
     try {
       final response = await dio.get("/api/stores/countryCodeDropDown");
-      log(response.toString());
+
       return response;
     } catch (e) {
-      log(e.toString());
       rethrow;
     }
   }
 
   Future<Response> postUserInfo(Map<String, dynamic> data) async {
     try {
-      final response = await dio.put("/api/users/sendOtp", data: data);
-      log(response.toString());
+      final response = await dio.post("/api/users/sendOtp", data: data);
+
       return response;
     } catch (e) {
-      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<Response> verifyOtp(Map<String, dynamic> data) async {
+    try {
+      final response = await dio.post("/api/users/verifyOtp", data: data);
+
+      return response;
+    } catch (e) {
       rethrow;
     }
   }

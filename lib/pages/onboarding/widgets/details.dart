@@ -53,7 +53,7 @@ class _DetailsState extends State<Details> {
           ),
         ),
         Positioned(
-          bottom: 100,
+          bottom: 92,
           right: MediaQuery.of(context).size.width / 2 - 20,
 
           child: SmoothPageIndicator(
@@ -69,7 +69,7 @@ class _DetailsState extends State<Details> {
           ),
         ),
         Positioned(
-          bottom: 10,
+          bottom: -8,
           right: 8,
           left: 8,
           child: Padding(

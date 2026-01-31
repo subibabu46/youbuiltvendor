@@ -1,6 +1,7 @@
 import 'package:design_task_1/pages/get_started/widgets/register_button.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/store_registration/store_registration_screen.dart';
+import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 
 enum BusinessType { store, service }
@@ -68,43 +69,28 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                 },
                 isPressed: selectedType == BusinessType.service,
               ),
-              Spacer(),
-              NextButton(
-                buttonText: 'Get Started',
-                onPressed: () {
-                  if (selectedType == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Please choose one to continue",
-                          style: TextStyle(color: Color(0xffffffff)),
-                        ),
-                        duration: Duration(seconds: 2),
-                        backgroundColor: Color(0xff737373),
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        margin: EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 80,
-                        ),
-                      ),
-                    );
-                    return;
-                  }
-                  if (selectedType == BusinessType.store) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StoreRegistrationScreen(),
-                      ),
-                    );
-                  } else {}
-                },
-              ),
             ],
           ),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 40, left: 16, right: 16),
+        child: NextButton(
+          buttonText: 'Get Started',
+          onPressed: () {
+            if (selectedType == null) {
+              messageTost("Please choose one to continue", context);
+              return;
+            }
+            if (selectedType == BusinessType.store) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StoreRegistrationScreen(),
+                ),
+              );
+            } else {}
+          },
         ),
       ),
     );

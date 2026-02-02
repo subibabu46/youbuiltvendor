@@ -1,4 +1,5 @@
-import 'package:design_task_1/pages/splash_screen.dart';
+import 'package:design_task_1/pages/store_registration/register_step_1_screen.dart';
+import 'package:design_task_1/pages/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

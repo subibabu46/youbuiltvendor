@@ -1,24 +1,22 @@
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/registration/widgets/input_number.dart';
-import 'package:design_task_1/pages/registration/widgets/input_text.dart';
-import 'package:design_task_1/pages/store_registration/otp_verification.dart';
-import 'package:design_task_1/pages/store_registration/timer_provider.dart';
-import 'package:design_task_1/providers/register_provider.dart';
+import 'package:design_task_1/pages/store_registration/widgets/input_number.dart';
+import 'package:design_task_1/pages/store_registration/widgets/input_text.dart';
+import 'package:design_task_1/pages/store_registration/verify_otp_screen.dart';
+import 'package:design_task_1/pages/store_registration/provider/timer_provider.dart';
+import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StoreRegistrationScreen extends ConsumerStatefulWidget {
-  const StoreRegistrationScreen({super.key});
+class SendOtpScreen extends ConsumerStatefulWidget {
+  const SendOtpScreen({super.key});
 
   @override
-  ConsumerState<StoreRegistrationScreen> createState() =>
-      _StoreRegistrationScreenState();
+  ConsumerState<SendOtpScreen> createState() => _SendOtpScreenState();
 }
 
-class _StoreRegistrationScreenState
-    extends ConsumerState<StoreRegistrationScreen> {
+class _SendOtpScreenState extends ConsumerState<SendOtpScreen> {
   TextEditingController controller = TextEditingController();
   TextEditingController numberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -96,6 +94,14 @@ class _StoreRegistrationScreenState
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            if (timerState.secondsLeft > 0 && timerState.secondsLeft < 60)
+              Text(
+                timerState.secondsLeft > 0
+                    ? 'Request OTP in ${timerState.secondsLeft} s'
+                    : '',
+                style: TextStyle(color: Color(0xffa3a3a3)),
+              ),
+            SizedBox(height: 10),
             Text.rich(
               TextSpan(
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
@@ -136,27 +142,33 @@ class _StoreRegistrationScreenState
                     code: selectedCountryCode,
                     type: "store",
                   );
-                  final result = await ref.read(registerProvider(userInfo));
+                  try {
+                    final result = await ref.read(sendOtpProvider(userInfo));
 
-                  if (context.mounted) {
-                    if (result.status) {
-                      timerNotifier.start();
-                      messageTost(result.message, context);
-                      Future.delayed(const Duration(seconds: 2), () {
-                        if (context.mounted) {
-                          {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    OtpVerification(userInfo: userInfo),
-                              ),
-                            );
+                    if (context.mounted) {
+                      if (result.status) {
+                        timerNotifier.start();
+                        messageTost(result.message, context);
+                        Future.delayed(const Duration(seconds: 2), () {
+                          if (context.mounted) {
+                            {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      VerifyOtpScreen(userInfo: userInfo),
+                                ),
+                              );
+                            }
                           }
-                        }
-                      });
-                    } else {
-                      messageTost(result.message, context);
+                        });
+                      } else {
+                        messageTost(result.message, context);
+                      }
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      messageTost(duration: 2, e.toString(), context);
                     }
                   }
                 }

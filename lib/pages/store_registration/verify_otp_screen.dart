@@ -1,35 +1,36 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/registration/register_now_basic_info.dart';
-import 'package:design_task_1/pages/store_registration/timer_provider.dart';
-import 'package:design_task_1/providers/register_provider.dart';
+import 'package:design_task_1/pages/store_registration/register_step_1_screen.dart';
+import 'package:design_task_1/pages/store_registration/provider/timer_provider.dart';
+import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pinput/pinput.dart';
 
-class OtpVerification extends ConsumerStatefulWidget {
+class VerifyOtpScreen extends ConsumerStatefulWidget {
   final UserModel userInfo;
-  const OtpVerification({super.key, required this.userInfo});
+  const VerifyOtpScreen({super.key, required this.userInfo});
 
   @override
-  ConsumerState<OtpVerification> createState() => _OtpVerificationState();
+  ConsumerState<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
 }
 
-class _OtpVerificationState extends ConsumerState<OtpVerification> {
+class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
   bool isOtpVerified = false;
   final _formKey = GlobalKey<FormState>();
-
+  String otp = '';
   @override
   Widget build(BuildContext context) {
     final timerState = ref.watch(otpTimerProvider);
     final timerNotifier = ref.read(otpTimerProvider.notifier);
     var userInfo = widget.userInfo;
-    String otp = '';
+
     return Scaffold(
       body: SafeArea(
         child: GestureDetector(
@@ -73,6 +74,7 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
                               onCompleted: (pin) {
                                 otp = pin;
                               },
+
                               errorTextStyle: TextStyle(
                                 color: Colors.red,
                                 fontSize: 12,
@@ -99,6 +101,21 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
+                              errorPinTheme: PinTheme(
+                                width: 56,
+                                height: 56,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                textStyle: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
                             ),
                           ),
                           SizedBox(height: 24),
@@ -111,7 +128,7 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
                               children: [
                                 TextSpan(
                                   text: timerState.secondsLeft > 0
-                                      ? 'Resend OTP in ${timerState.secondsLeft} s'
+                                      ? 'Request OTP in ${timerState.secondsLeft} s'
                                       : 'Didn’t receive code? ',
                                   style: TextStyle(color: Color(0xffa3a3a3)),
                                 ),
@@ -134,7 +151,7 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
                                           type: userInfo.type,
                                         );
                                         final result = await ref.read(
-                                          registerProvider(userInfo),
+                                          sendOtpProvider(userInfo),
                                         );
                                         timerNotifier.start();
 
@@ -182,26 +199,33 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
               code: userInfo.code,
               type: userInfo.type,
             );
-            final result = await ref.read(otpProvider(otpInfo));
+            try {
+              final result = await ref.read(verifyOtpProvider(otpInfo));
 
-            if (context.mounted) {
-              if (result.status) {
-                isOtpVerified = true;
-                messageTost(result.message, context);
-                Future.delayed(const Duration(seconds: 3), () {
-                  if (context.mounted) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RegisterNowBasicInfo(),
-                      ),
-                      (route) => false,
-                    );
-                  }
-                });
-              } else {
-                messageTost(result.message, context);
+              if (context.mounted) {
+                if (result.status) {
+                  isOtpVerified = true;
+                  messageTost(result.message, context);
+                  Future.delayed(const Duration(seconds: 3), () {
+                    if (context.mounted) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RegisterStep1Screen(),
+                        ),
+                        (route) => false,
+                      );
+                    }
+                  });
+                } else {
+                  messageTost(result.message, context);
+                }
               }
+            } catch (e) {
+              if (context.mounted) {
+                messageTost(duration: 2, e.toString(), context);
+              }
+              log(e.toString());
             }
           },
         ),

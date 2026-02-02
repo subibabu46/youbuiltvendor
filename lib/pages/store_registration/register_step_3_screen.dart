@@ -1,16 +1,16 @@
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/registration/widgets/sub_title_bubbles.dart';
-import 'package:design_task_1/pages/registration/widgets/upload_file.dart';
+import 'package:design_task_1/pages/store_registration/widgets/steps_bubbles.dart';
+import 'package:design_task_1/pages/store_registration/widgets/upload_file.dart';
 import 'package:flutter/material.dart';
 
-class RegisterNowDocuments extends StatefulWidget {
-  const RegisterNowDocuments({super.key});
+class RegisterStep3Screen extends StatefulWidget {
+  const RegisterStep3Screen({super.key});
 
   @override
-  State<RegisterNowDocuments> createState() => _RegisterNowDocumentsState();
+  State<RegisterStep3Screen> createState() => _RegisterStep3ScreenState();
 }
 
-class _RegisterNowDocumentsState extends State<RegisterNowDocuments> {
+class _RegisterStep3ScreenState extends State<RegisterStep3Screen> {
   TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class _RegisterNowDocumentsState extends State<RegisterNowDocuments> {
                     ),
                   ),
                   SizedBox(height: 8),
-                  SubTitleBubbles(isEnable2: true),
+                  StepsBubbles(isEnable2: true),
                   SizedBox(height: 40),
                   UploadFile(controller: controller, label: 'Business Logo'),
                   UploadFile(controller: controller, label: 'Company PAN Card'),

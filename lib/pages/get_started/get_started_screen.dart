@@ -1,6 +1,6 @@
 import 'package:design_task_1/pages/get_started/widgets/register_button.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/store_registration/store_registration_screen.dart';
+import 'package:design_task_1/pages/store_registration/send_otp_screen.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 
@@ -85,9 +85,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
             if (selectedType == BusinessType.store) {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => StoreRegistrationScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => SendOtpScreen()),
               );
             } else {}
           },

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class SubTitleBubbles extends StatelessWidget {
+class StepsBubbles extends StatelessWidget {
   final bool isEnable2;
 
-  const SubTitleBubbles({super.key, required this.isEnable2});
+  const StepsBubbles({super.key, required this.isEnable2});
 
   @override
   Widget build(BuildContext context) {

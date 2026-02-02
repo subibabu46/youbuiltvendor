@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 
-class InputSelect extends StatelessWidget {
+class InputSelect extends StatefulWidget {
   const InputSelect({
     super.key,
     this.hintText,
     required this.label,
     this.isRequired = true,
+    required this.onSelected,
   });
 
   final String? hintText;
   final String label;
   final bool isRequired;
+  final void Function(String) onSelected;
 
+  @override
+  State<InputSelect> createState() => _InputSelectState();
+}
+
+class _InputSelectState extends State<InputSelect> {
+  bool _hasError = false;
+  String? selectedValue;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,8 +32,8 @@ class InputSelect extends StatelessWidget {
             TextSpan(
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
               children: [
-                TextSpan(text: label),
-                isRequired
+                TextSpan(text: widget.label),
+                widget.isRequired
                     ? TextSpan(
                         text: '*',
                         style: TextStyle(color: Colors.red),
@@ -44,6 +53,14 @@ class InputSelect extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: DropdownButton<String>(
+                hint: Text(
+                  widget.hintText ?? 'Select details',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Color(0xffa3a3a3),
+                  ),
+                ),
                 icon: Icon(Icons.keyboard_arrow_down),
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
@@ -52,14 +69,30 @@ class InputSelect extends StatelessWidget {
                 ),
                 isExpanded: true,
                 underline: SizedBox(),
-                value: hintText ?? 'Select details',
+                value: selectedValue,
                 items: ['Select details', '', ''].map((code) {
                   return DropdownMenuItem(value: code, child: Text(code));
                 }).toList(),
-                onChanged: (value) {},
+                onChanged: (value) {
+                  if (value == null || value.isEmpty) {
+                    setState(() => _hasError = true);
+                  }
+
+                  setState(() => _hasError = false);
+
+                  widget.onSelected;
+                },
               ),
             ),
           ),
+          if (_hasError)
+            Padding(
+              padding: EdgeInsets.only(top: 4, left: 4),
+              child: Text(
+                '    ${widget.hintText}',
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:design_task_1/models/country_code.dart';
 import 'package:design_task_1/models/otp_model.dart';
+import 'package:design_task_1/models/register_step_1_model.dart';
 import 'package:design_task_1/models/response_model.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/services/store_service.dart';
@@ -32,10 +33,10 @@ class StoreRepository {
     }
   }
 
-  Future<ResponseModel> postUserInfo(UserModel userInfo) async {
+  Future<ResponseModel> sendOtp(UserModel userInfo) async {
     try {
       final data = userInfo.toJson();
-      final response = await storeService.postUserInfo(data);
+      final response = await storeService.sendOtp(data);
       log('sendOtp: ${response.data}');
       if (response.statusCode == 200) {
         return ResponseModel.fromJson(response.data);
@@ -61,6 +62,25 @@ class StoreRepository {
       return ResponseModel.fromJson(response.data);
     } catch (e) {
       log('verifyOtp: $e');
+      rethrow;
+    }
+  }
+
+  Future<ResponseModel> registerStep1(
+    RegisterStep1Model registerStep1Info,
+  ) async {
+    try {
+      final data = registerStep1Info.toJson();
+      final response = await storeService.registerStep1(data);
+      log('registerStep1: ${response.data}');
+
+      if (response.statusCode == 200) {
+        return ResponseModel.fromJson(response.data);
+      }
+
+      return ResponseModel.fromJson(response.data);
+    } catch (e) {
+      log('registerStep1: $e');
       rethrow;
     }
   }

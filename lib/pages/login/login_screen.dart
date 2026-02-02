@@ -1,5 +1,5 @@
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/registration/widgets/input_number.dart';
+import 'package:design_task_1/pages/store_registration/widgets/input_number.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {

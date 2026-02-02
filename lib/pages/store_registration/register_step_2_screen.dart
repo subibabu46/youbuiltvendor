@@ -1,21 +1,20 @@
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/registration/register_now_documents.dart';
-import 'package:design_task_1/pages/registration/widgets/input_select.dart';
-import 'package:design_task_1/pages/registration/widgets/input_text.dart';
-import 'package:design_task_1/pages/registration/widgets/sub_title_bubbles.dart';
+import 'package:design_task_1/pages/store_registration/register_step_3_screen.dart';
+import 'package:design_task_1/pages/store_registration/widgets/input_select.dart';
+import 'package:design_task_1/pages/store_registration/widgets/input_text.dart';
+import 'package:design_task_1/pages/store_registration/widgets/steps_bubbles.dart';
 import 'package:flutter/material.dart';
 
-class RegisterNowAddressLocation extends StatefulWidget {
-  const RegisterNowAddressLocation({super.key});
+class RegisterStep2Screen extends StatefulWidget {
+  const RegisterStep2Screen({super.key});
 
   @override
-  State<RegisterNowAddressLocation> createState() =>
-      _RegisterNowAddressLocationState();
+  State<RegisterStep2Screen> createState() => _RegisterStep2ScreenState();
 }
 
-class _RegisterNowAddressLocationState
-    extends State<RegisterNowAddressLocation> {
+class _RegisterStep2ScreenState extends State<RegisterStep2Screen> {
   TextEditingController controller = TextEditingController();
+  String? country, state, district;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,16 +37,25 @@ class _RegisterNowAddressLocationState
                     ),
                   ),
                   SizedBox(height: 8),
-                  SubTitleBubbles(isEnable2: true),
+                  StepsBubbles(isEnable2: true),
                   SizedBox(height: 40),
                   InputText(controller: controller, label: 'Address 1'),
                   InputText(controller: controller, label: 'Address 2'),
                   InputText(controller: controller, label: 'Location'),
 
-                  InputSelect(label: 'Country'),
+                  InputSelect(
+                    label: 'Country',
+                    onSelected: (value) => country = value,
+                  ),
                   InputText(controller: controller, label: 'Pin Code'),
-                  InputSelect(label: 'State'),
-                  InputSelect(label: 'District'),
+                  InputSelect(
+                    label: 'State',
+                    onSelected: (value) => state = value,
+                  ),
+                  InputSelect(
+                    label: 'District',
+                    onSelected: (value) => district = value,
+                  ),
                   SizedBox(height: 24),
                 ],
               ),
@@ -62,7 +70,7 @@ class _RegisterNowAddressLocationState
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RegisterNowDocuments()),
+              MaterialPageRoute(builder: (context) => RegisterStep3Screen()),
             );
           },
         ),

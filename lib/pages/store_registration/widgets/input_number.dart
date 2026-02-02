@@ -1,4 +1,4 @@
-import 'package:design_task_1/providers/country_code_provider.dart';
+import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

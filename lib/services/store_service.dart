@@ -38,13 +38,13 @@ class StoreService {
     }
   }
 
-  Future<Response> re(Map<String, dynamic> data) async {
-    try {
-      final response = await dio.post("/api/users/verifyOtp", data: data);
+  // Future<Response> re(Map<String, dynamic> data) async {
+  //   try {
+  //     final response = await dio.post("/api/users/verifyOtp", data: data);
 
-      return response;
-    } catch (e) {
-      rethrow;
-    }
-  }
+  //     return response;
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 }

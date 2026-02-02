@@ -1,4 +1,5 @@
 import 'package:design_task_1/providers/country_code_provider.dart';
+import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,6 +24,8 @@ class InputNumber extends ConsumerStatefulWidget {
 }
 
 class _InputNumberState extends ConsumerState<InputNumber> {
+  bool _hasError = false;
+
   String? selectedValue = '+91';
   @override
   Widget build(BuildContext context) {
@@ -58,7 +61,9 @@ class _InputNumberState extends ConsumerState<InputNumber> {
             padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: Color(0xffc1c1c1)),
+              border: Border.all(
+                color: _hasError ? Colors.red : const Color(0xffc1c1c1),
+              ),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -88,15 +93,20 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                     },
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
-                    error: (error, stack) =>
-                        Center(child: Text(error.toString())),
+                    error: (error, stack) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        messageTost('Something went wrong', context);
+                      });
+
+                      return Center(child: Text('+ '));
+                    },
                   ),
 
                   SizedBox(width: 8),
                   Container(width: 1, height: 24, color: Color(0xffe0e0e0)),
                   SizedBox(width: 8),
                   Expanded(
-                    child: TextField(
+                    child: TextFormField(
                       controller: controller,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
@@ -107,13 +117,31 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
+                        errorStyle: const TextStyle(height: 0, fontSize: 0),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          setState(() => _hasError = true);
+                          return 'Enter Your $label';
+                        }
+
+                        setState(() => _hasError = false);
+                        return null;
+                      },
                     ),
                   ),
                 ],
               ),
             ),
           ),
+          if (_hasError)
+            Padding(
+              padding: EdgeInsets.only(top: 4, left: 4),
+              child: Text(
+                '    Enter Your $label',
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
         ],
       ),
     );

@@ -4,6 +4,7 @@ import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/registration/register_now_basic_info.dart';
+import 'package:design_task_1/pages/store_registration/timer_provider.dart';
 import 'package:design_task_1/providers/register_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/gestures.dart';
@@ -20,41 +21,13 @@ class OtpVerification extends ConsumerStatefulWidget {
 }
 
 class _OtpVerificationState extends ConsumerState<OtpVerification> {
-  static const int _initialTime = 60;
-  int _secondsLeft = _initialTime;
   bool isOtpVerified = false;
-  Timer? _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _startTimer();
-  }
-
-  void _startTimer() {
-    _timer?.cancel();
-    _secondsLeft = _initialTime;
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_secondsLeft == 0 && isOtpVerified == false) {
-        timer.cancel();
-        if (context.mounted) {
-          messageTost('OTP expired', context);
-        }
-      } else {
-        setState(() => _secondsLeft--);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final timerState = ref.watch(otpTimerProvider);
+    final timerNotifier = ref.read(otpTimerProvider.notifier);
     var userInfo = widget.userInfo;
     String otp = '';
     return Scaffold(
@@ -93,24 +66,38 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Pinput(
-                            length: 4,
-                            onCompleted: (pin) {
-                              otp = pin;
-                            },
-                            separatorBuilder: (index) =>
-                                const SizedBox(width: 20),
-                            defaultPinTheme: PinTheme(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              width: 56,
-                              height: 56,
-                              textStyle: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
+                          Form(
+                            key: _formKey,
+                            child: Pinput(
+                              length: 4,
+                              onCompleted: (pin) {
+                                otp = pin;
+                              },
+                              errorTextStyle: TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
                               ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xffa3a3a3)),
-                                borderRadius: BorderRadius.circular(8),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Enter Your Pin';
+                                }
+
+                                return null;
+                              },
+                              separatorBuilder: (index) =>
+                                  const SizedBox(width: 20),
+                              defaultPinTheme: PinTheme(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                width: 56,
+                                height: 56,
+                                textStyle: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xffa3a3a3)),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
                             ),
                           ),
@@ -123,13 +110,15 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: _secondsLeft > 0
-                                      ? 'Resend OTP in $_secondsLeft s'
+                                  text: timerState.secondsLeft > 0
+                                      ? 'Resend OTP in ${timerState.secondsLeft} s'
                                       : 'Didn’t receive code? ',
                                   style: TextStyle(color: Color(0xffa3a3a3)),
                                 ),
                                 TextSpan(
-                                  text: _secondsLeft > 0 ? '' : 'Resend',
+                                  text: timerState.secondsLeft > 0
+                                      ? ''
+                                      : 'Resend',
                                   style: TextStyle(
                                     color: Colors.red,
                                     decoration: TextDecoration.underline,
@@ -137,7 +126,7 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () async {
-                                      if (_secondsLeft == 0) {
+                                      if (timerState.secondsLeft == 0) {
                                         userInfo = UserModel(
                                           phoneNumber: userInfo.phoneNumber,
                                           name: userInfo.name,
@@ -147,17 +136,17 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
                                         final result = await ref.read(
                                           registerProvider(userInfo),
                                         );
-                                        _startTimer();
+                                        timerNotifier.start();
 
                                         if (context.mounted) {
-                                          if (result) {
+                                          if (result.status) {
                                             messageTost(
-                                              'OTP sent successfully..',
+                                              result.message,
                                               context,
                                             );
                                           } else {
                                             messageTost(
-                                              'Something went wrong',
+                                              result.message,
                                               context,
                                             );
                                           }
@@ -183,6 +172,10 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
         child: NextButton(
           buttonText: 'Verify',
           onPressed: () async {
+            final isValid = _formKey.currentState!.validate();
+            if (!isValid) {
+              return;
+            }
             final otpInfo = OtpModel(
               phoneNumber: userInfo.phoneNumber,
               otp: otp,
@@ -192,21 +185,22 @@ class _OtpVerificationState extends ConsumerState<OtpVerification> {
             final result = await ref.read(otpProvider(otpInfo));
 
             if (context.mounted) {
-              if (result) {
+              if (result.status) {
                 isOtpVerified = true;
-                messageTost('OTP verified successfully', context);
+                messageTost(result.message, context);
                 Future.delayed(const Duration(seconds: 3), () {
                   if (context.mounted) {
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder: (context) => RegisterNowBasicInfo(),
                       ),
+                      (route) => false,
                     );
                   }
                 });
               } else {
-                messageTost('Something went wrong', context);
+                messageTost(result.message, context);
               }
             }
           },

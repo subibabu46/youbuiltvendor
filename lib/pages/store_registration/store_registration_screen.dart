@@ -3,6 +3,7 @@ import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/registration/widgets/input_number.dart';
 import 'package:design_task_1/pages/registration/widgets/input_text.dart';
 import 'package:design_task_1/pages/store_registration/otp_verification.dart';
+import 'package:design_task_1/pages/store_registration/timer_provider.dart';
 import 'package:design_task_1/providers/register_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class _StoreRegistrationScreenState
     extends ConsumerState<StoreRegistrationScreen> {
   TextEditingController controller = TextEditingController();
   TextEditingController numberController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void dispose() {
     controller.dispose();
@@ -30,6 +33,8 @@ class _StoreRegistrationScreenState
   @override
   Widget build(BuildContext context) {
     String selectedCountryCode = '+91';
+    final timerState = ref.watch(otpTimerProvider);
+    final timerNotifier = ref.read(otpTimerProvider.notifier);
 
     return Scaffold(
       body: GestureDetector(
@@ -40,42 +45,45 @@ class _StoreRegistrationScreenState
             child: SizedBox(
               height: MediaQuery.of(context).size.height,
               child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Let’s \nGet Started',
-                      style: TextStyle(
-                        color: Color(0xff2c2c2c),
-                        fontWeight: FontWeight.w700,
-                        fontSize: 32,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Let’s \nGet Started',
+                        style: TextStyle(
+                          color: Color(0xff2c2c2c),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 32,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Tell Us About Yourself',
-                      style: TextStyle(
-                        color: Color(0xff737373),
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
+                      SizedBox(height: 8),
+                      Text(
+                        'Tell Us About Yourself',
+                        style: TextStyle(
+                          color: Color(0xff737373),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    InputText(
-                      controller: controller,
-                      label: 'Full Name',
-                      hintText: 'Enter full name',
-                    ),
-                    InputNumber(
-                      controller: numberController,
-                      label: 'Phone Number',
-                      hintText: 'Enter number',
-                      onCountryCodeChanged: (code) {
-                        selectedCountryCode = code;
-                      },
-                    ),
-                  ],
+                      SizedBox(height: 8),
+                      InputText(
+                        controller: controller,
+                        label: 'Full Name',
+                        hintText: 'Enter full name',
+                      ),
+                      InputNumber(
+                        controller: numberController,
+                        label: 'Phone Number',
+                        hintText: 'Enter number',
+                        onCountryCodeChanged: (code) {
+                          selectedCountryCode = code;
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -107,11 +115,19 @@ class _StoreRegistrationScreenState
                 ],
               ),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 10),
             NextButton(
               buttonText: 'Submit',
               onPressed: () async {
-                if (numberController.text.isEmpty || controller.text.isEmpty) {
+                final isValid = _formKey.currentState!.validate();
+                if (timerState.isRunning) {
+                  messageTost(
+                    'Request OTP in ${timerState.secondsLeft} s',
+                    context,
+                  );
+                  return;
+                }
+                if (!isValid) {
                   messageTost('Fields shouldn\'t be empty', context);
                 } else {
                   final userInfo = UserModel(
@@ -123,8 +139,9 @@ class _StoreRegistrationScreenState
                   final result = await ref.read(registerProvider(userInfo));
 
                   if (context.mounted) {
-                    if (result) {
-                      messageTost('OTP sent successfully..', context);
+                    if (result.status) {
+                      timerNotifier.start();
+                      messageTost(result.message, context);
                       Future.delayed(const Duration(seconds: 2), () {
                         if (context.mounted) {
                           {
@@ -139,7 +156,7 @@ class _StoreRegistrationScreenState
                         }
                       });
                     } else {
-                      messageTost('Something went wrong', context);
+                      messageTost(result.message, context);
                     }
                   }
                 }

@@ -45,7 +45,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
               RegisterButton(
                 title: 'Store Registration',
                 content: 'Register your store and list \nproducts',
-                image: 'assets/ChatGPT Image Jan 27, 2026, 11_55_15 AM 1.png',
+                image: 'assets/shop 1.png',
                 width: 90,
                 height: 80,
                 onPressed: () {
@@ -59,7 +59,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
               RegisterButton(
                 title: 'Service Hub Registration',
                 content: 'Register your service and list your \nofferings',
-                image: 'assets/ChatGPT Image Jan 27, 2026, 11_55_15 AM 2.png',
+                image: 'assets/mechanic1 1.png',
                 width: 77,
                 height: 80,
                 onPressed: () {

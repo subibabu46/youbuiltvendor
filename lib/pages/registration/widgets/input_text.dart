@@ -40,6 +40,7 @@ class InputText extends StatelessWidget {
           TextFormField(
             controller: controller,
             decoration: InputDecoration(
+              errorStyle: TextStyle(color: Colors.red),
               hintText: hintText ?? 'Enter details',
               hintStyle: TextStyle(
                 color: Color(0xffa3a3a3),
@@ -54,7 +55,22 @@ class InputText extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
                 borderSide: BorderSide(color: Color(0xffc1c1c1)),
               ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+                borderSide: const BorderSide(color: Colors.red),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+                borderSide: const BorderSide(color: Colors.red),
+              ),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Enter Your $label';
+              }
+
+              return null;
+            },
           ),
         ],
       ),

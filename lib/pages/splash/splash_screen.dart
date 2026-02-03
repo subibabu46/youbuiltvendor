@@ -1,30 +1,46 @@
-import 'package:design_task_1/pages/onboarding/onboarding_screen.dart';
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
-class SplashScreen extends StatefulWidget {
+import 'package:design_task_1/constants/shared_pref_names.dart';
+import 'package:design_task_1/pages/onboarding/onboarding_screen.dart';
+import 'package:design_task_1/pages/store_registration/register_step_2_screen.dart';
+import 'package:design_task_1/providers/shared_pref_provider.dart';
+import 'package:design_task_1/utils/message_toast.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class SplashScreen extends ConsumerWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final prefAsync = ref.watch(sharedPreferencesProvider);
 
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
+    prefAsync.whenData((pref) {
+      Future.delayed(const Duration(seconds: 3), () {
+        if (!context.mounted) return;
 
-    Future.delayed(Duration(seconds: 3)).then((_) {
-      if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => OnboardingScreen()),
-        );
-      }
+        try {
+          final registerId = pref.getInt(step1Id);
+          SharedPrefCatch.instance.addInt(name: step1Id, value: registerId);
+          log('register step 1 Id: $registerId');
+          if (registerId != null) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const RegisterStep2Screen()),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+            );
+          }
+        } catch (e) {
+          if (context.mounted) {
+            messageTost(duration: 2, e.toString(), context);
+          }
+        }
+      });
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

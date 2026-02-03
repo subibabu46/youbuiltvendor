@@ -1,8 +1,13 @@
 class ResponseModel {
   final bool status;
   final String message;
+  final Map<String, dynamic>? data;
 
-  ResponseModel({required this.status, required this.message});
+  ResponseModel({
+    required this.status,
+    required this.message,
+    required this.data,
+  });
 
   factory ResponseModel.fromJson(Map<String, dynamic> json) {
     final status = json['status'];
@@ -15,6 +20,10 @@ class ResponseModel {
       statusBool = false;
     }
 
-    return ResponseModel(status: statusBool, message: json['message'] ?? '');
+    return ResponseModel(
+      status: statusBool,
+      message: json['message'] ?? '',
+      data: json['data'],
+    );
   }
 }

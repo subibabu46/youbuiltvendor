@@ -211,7 +211,8 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RegisterStep1Screen(),
+                          builder: (context) =>
+                              RegisterStep1Screen(userInfo: userInfo),
                         ),
                         (route) => false,
                       );

@@ -1,4 +1,6 @@
+import 'package:design_task_1/models/get_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class InputSelect extends StatefulWidget {
   const InputSelect({
@@ -7,12 +9,14 @@ class InputSelect extends StatefulWidget {
     required this.label,
     this.isRequired = true,
     required this.onSelected,
+    required this.asyncList,
   });
 
   final String? hintText;
   final String label;
   final bool isRequired;
-  final void Function(String) onSelected;
+  final void Function(String)? onSelected;
+  final AsyncValue<List<GetModel>> asyncList;
 
   @override
   State<InputSelect> createState() => _InputSelectState();
@@ -52,36 +56,62 @@ class _InputSelectState extends State<InputSelect> {
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: DropdownButton<String>(
-                hint: Text(
-                  widget.hintText ?? 'Select details',
+              child: widget.asyncList.when(
+                data: (data) => DropdownButton<String>(
+                  hint: Text(
+                    widget.hintText ?? 'Select details',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Color(0xffa3a3a3),
+                    ),
+                  ),
+                  icon: Icon(Icons.keyboard_arrow_down),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
                     color: Color(0xffa3a3a3),
                   ),
-                ),
-                icon: Icon(Icons.keyboard_arrow_down),
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: Color(0xffa3a3a3),
-                ),
-                isExpanded: true,
-                underline: SizedBox(),
-                value: selectedValue,
-                items: ['Select details', '', ''].map((code) {
-                  return DropdownMenuItem(value: code, child: Text(code));
-                }).toList(),
-                onChanged: (value) {
-                  if (value == null || value.isEmpty) {
-                    setState(() => _hasError = true);
-                  }
+                  isExpanded: true,
+                  underline: SizedBox(),
+                  value: selectedValue,
+                  items: data.map((e) {
+                    return DropdownMenuItem(
+                      value: e.label,
+                      child: Text(e.label),
+                    );
+                  }).toList(),
 
-                  setState(() => _hasError = false);
+                  onChanged: (value) {
+                    if (value == null || value.isEmpty) {
+                      setState(() => _hasError = true);
+                      return;
+                    }
 
-                  widget.onSelected;
-                },
+                    setState(() {
+                      _hasError = false;
+                      selectedValue = value;
+                    });
+
+                    if (widget.onSelected != null) {
+                      widget.onSelected!(value);
+                    }
+                  },
+                ),
+                loading: () => Center(child: CircularProgressIndicator()),
+                error: (error, stackTrace) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      'Something went wrong',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: Color(0xffa3a3a3),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

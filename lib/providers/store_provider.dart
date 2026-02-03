@@ -1,6 +1,7 @@
-import 'package:design_task_1/models/country_code.dart';
+import 'package:design_task_1/models/get_model.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/register_step_1_model.dart';
+import 'package:design_task_1/models/register_step_2_model.dart';
 import 'package:design_task_1/models/response_model.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/repository/store_repository.dart';
@@ -21,9 +22,33 @@ final storeRepositoryProvider = Provider<StoreRepository>((ref) {
 //-------------------------------------------------------------------
 
 //Country Code
-final countryCodesProvider = FutureProvider<List<CountryCode>>((ref) async {
+final countryCodesProvider = FutureProvider<List<GetModel>>((ref) async {
   final repository = ref.watch(storeRepositoryProvider);
   return repository.fetchCountryCodes();
+});
+
+//Business Type
+final businessTypesProvider = FutureProvider<List<GetModel>>((ref) async {
+  final repository = ref.watch(storeRepositoryProvider);
+  return repository.fetchBusinessTypes();
+});
+
+//Country
+final countriesProvider = FutureProvider<List<GetModel>>((ref) async {
+  final repository = ref.watch(storeRepositoryProvider);
+  return repository.fetchCountries();
+});
+
+//State
+final statesProvider = FutureProvider<List<GetModel>>((ref) async {
+  final repository = ref.watch(storeRepositoryProvider);
+  return repository.fetchStates();
+});
+
+//District
+final districtsProvider = FutureProvider<List<GetModel>>((ref) async {
+  final repository = ref.watch(storeRepositoryProvider);
+  return repository.fetchDistricts();
 });
 
 //Send Otp
@@ -49,4 +74,11 @@ final registerStep1Provider =
     Provider.family<Future<ResponseModel>, RegisterStep1Model>((ref, value) {
       final repo = ref.read(storeRepositoryProvider);
       return repo.registerStep1(value);
+    });
+
+//Register Step 2
+final registerStep2Provider =
+    Provider.family<Future<ResponseModel>, RegisterStep2Model>((ref, value) {
+      final repo = ref.read(storeRepositoryProvider);
+      return repo.registerStep2(value);
     });

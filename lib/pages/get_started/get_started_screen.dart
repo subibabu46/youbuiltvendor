@@ -4,7 +4,7 @@ import 'package:design_task_1/pages/store_registration/send_otp_screen.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 
-enum BusinessType { store, service }
+enum Business { store, service }
 
 class GetStartedScreen extends StatefulWidget {
   const GetStartedScreen({super.key});
@@ -14,7 +14,7 @@ class GetStartedScreen extends StatefulWidget {
 }
 
 class _GetStartedScreenState extends State<GetStartedScreen> {
-  BusinessType? selectedType;
+  Business? selectedType;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,10 +50,10 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                 height: 80,
                 onPressed: () {
                   setState(() {
-                    selectedType = BusinessType.store;
+                    selectedType = Business.store;
                   });
                 },
-                isPressed: selectedType == BusinessType.store,
+                isPressed: selectedType == Business.store,
               ),
               SizedBox(height: 24),
               RegisterButton(
@@ -64,10 +64,10 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                 height: 80,
                 onPressed: () {
                   setState(() {
-                    selectedType = BusinessType.service;
+                    selectedType = Business.service;
                   });
                 },
-                isPressed: selectedType == BusinessType.service,
+                isPressed: selectedType == Business.service,
               ),
             ],
           ),
@@ -82,7 +82,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
               messageTost("Please choose one to continue", context);
               return;
             }
-            if (selectedType == BusinessType.store) {
+            if (selectedType == Business.store) {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SendOtpScreen()),

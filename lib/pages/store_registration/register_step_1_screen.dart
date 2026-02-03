@@ -1,10 +1,13 @@
+import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/models/register_step_1_model.dart';
+import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/store_registration/register_step_2_screen.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_number.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_select.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_text.dart';
 import 'package:design_task_1/pages/store_registration/widgets/steps_bubbles.dart';
+import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +39,8 @@ class _RegisterStep1Controllers {
 }
 
 class RegisterStep1Screen extends ConsumerStatefulWidget {
-  const RegisterStep1Screen({super.key});
+  final UserModel userInfo;
+  const RegisterStep1Screen({super.key, required this.userInfo});
 
   @override
   ConsumerState<RegisterStep1Screen> createState() =>
@@ -50,6 +54,10 @@ class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
   @override
   Widget build(BuildContext context) {
     final controllers = _RegisterStep1Controllers();
+    controllers.ownerName.text = widget.userInfo.name;
+    controllers.phoneNumber.text = widget.userInfo.phoneNumber;
+    final countryCode = widget.userInfo.code;
+    final businessTypesAsync = ref.watch(businessTypesProvider);
     return Scaffold(
       body: SafeArea(
         child: GestureDetector(
@@ -78,6 +86,7 @@ class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
                       label: 'Business Name',
                     ),
                     InputText(
+                      isEnabled: false,
                       controller: controllers.ownerName,
                       label: 'Owner Name',
                     ),
@@ -97,9 +106,10 @@ class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
                           officialNumberCode = value,
                     ),
                     InputNumber(
+                      isEnabled: false,
+                      code: countryCode,
                       controller: controllers.phoneNumber,
                       label: 'Phone Number',
-                      onCountryCodeChanged: (value) => code = value,
                     ),
                     InputText(
                       controller: controllers.companyPanNumber,
@@ -120,6 +130,7 @@ class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
                     InputSelect(
                       label: 'Business Type',
                       onSelected: (value) => businessType = value,
+                      asyncList: businessTypesAsync,
                     ),
                   ],
                 ),
@@ -157,7 +168,8 @@ class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
                 final result = await ref.read(
                   registerStep1Provider(registerStep1Info),
                 );
-
+                final pref = ref.watch(sharedPreferencesProvider).value;
+                pref?.setInt(step1Id, result.data?['Id']);
                 if (context.mounted) {
                   if (result.status) {
                     messageTost(result.message, context);

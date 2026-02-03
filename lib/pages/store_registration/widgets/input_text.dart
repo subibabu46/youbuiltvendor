@@ -6,13 +6,14 @@ class InputText extends StatelessWidget {
     required this.controller,
     this.hintText,
     required this.label,
-    this.isRequired = true,
+    this.isFieldRequired = true, this.isEnabled=true,
   });
 
   final TextEditingController controller;
   final String? hintText;
   final String label;
-  final bool isRequired;
+  final bool isFieldRequired;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class InputText extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
               children: [
                 TextSpan(text: label),
-                isRequired
+                isFieldRequired
                     ? TextSpan(
                         text: '*',
                         style: TextStyle(color: Colors.red),
@@ -38,6 +39,7 @@ class InputText extends StatelessWidget {
 
           SizedBox(height: 8),
           TextFormField(
+            enabled: isEnabled,
             controller: controller,
             decoration: InputDecoration(
               errorStyle: TextStyle(color: Colors.red),
@@ -52,6 +54,10 @@ class InputText extends StatelessWidget {
                 borderSide: BorderSide(color: Color(0xffc1c1c1)),
               ),
               enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+                borderSide: BorderSide(color: Color(0xffc1c1c1)),
+              ),
+              disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(6),
                 borderSide: BorderSide(color: Color(0xffc1c1c1)),
               ),

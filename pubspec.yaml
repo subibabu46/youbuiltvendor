@@ -20,6 +20,7 @@ dependencies:
   dotted_border: ^3.1.0
   flutter_riverpod: ^3.2.0
   dio: ^5.9.1
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_test:

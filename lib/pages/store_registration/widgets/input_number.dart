@@ -8,6 +8,8 @@ class InputNumber extends ConsumerStatefulWidget {
   final String? hintText;
   final String label;
   final bool isRequired;
+  final bool isEnabled;
+  final String code;
   final void Function(String)? onCountryCodeChanged;
 
   const InputNumber({
@@ -17,6 +19,7 @@ class InputNumber extends ConsumerStatefulWidget {
     required this.label,
     this.isRequired = true,
     this.onCountryCodeChanged,
+    this.isEnabled = true,this.code='+91',
   });
 
   @override
@@ -73,14 +76,14 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                     data: (codes) {
                       return DropdownButton<String>(
                         underline: SizedBox(),
-                        value: selectedValue,
+                        value:widget.isEnabled? selectedValue:widget.code,
                         items: codes.map((code) {
                           return DropdownMenuItem(
                             value: code.label,
                             child: Text(code.label),
                           );
                         }).toList(),
-                        onChanged: (value) {
+                        onChanged:widget.isEnabled? (value) {
                           setState(() {
                             selectedValue = value;
                           });
@@ -88,7 +91,7 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                               widget.onCountryCodeChanged != null) {
                             widget.onCountryCodeChanged!(value);
                           }
-                        },
+                        }:null,
                       );
                     },
                     loading: () =>

@@ -75,9 +75,9 @@ class StoreRepository {
     }
   }
 
-  Future<List<GetModel>> fetchStates() async {
+  Future<List<GetModel>> fetchStates(String pinCode) async {
     try {
-      final response = await storeService.fetchStates();
+      final response = await storeService.fetchStates(pinCode);
       log('fetchStates: ${response.data}');
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
@@ -94,9 +94,9 @@ class StoreRepository {
     }
   }
 
-  Future<List<GetModel>> fetchDistricts() async {
+  Future<List<GetModel>> fetchDistricts(String pinCode) async {
     try {
-      final response = await storeService.fetchDistricts();
+      final response = await storeService.fetchDistricts(pinCode);
       log('fetchDistricts: ${response.data}');
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
@@ -169,10 +169,11 @@ class StoreRepository {
 
   Future<ResponseModel> registerStep2(
     RegisterStep2Model registerStep2Info,
+    step1Id,
   ) async {
     try {
       final data = registerStep2Info.toJson();
-      final response = await storeService.registerStep2(data);
+      final response = await storeService.registerStep2(data, step1Id);
       log('registerStep2: ${response.data}');
 
       if (response.statusCode == 200) {

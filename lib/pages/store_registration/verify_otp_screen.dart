@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/store_registration/register_step_1_screen.dart';
 import 'package:design_task_1/pages/store_registration/provider/timer_provider.dart';
+import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/gestures.dart';
@@ -201,10 +203,12 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
             );
             try {
               final result = await ref.read(verifyOtpProvider(otpInfo));
-
+              final pref = ref.watch(sharedPreferencesProvider).value;
+              pref?.setBool(otpVerified, result.status);
               if (context.mounted) {
                 if (result.status) {
                   isOtpVerified = true;
+
                   messageTost(result.message, context);
                   Future.delayed(const Duration(seconds: 3), () {
                     if (context.mounted) {

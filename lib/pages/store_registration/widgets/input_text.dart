@@ -6,7 +6,9 @@ class InputText extends StatelessWidget {
     required this.controller,
     this.hintText,
     required this.label,
-    this.isFieldRequired = true, this.isEnabled=true,
+    this.isFieldRequired = true,
+    this.isEnabled = true,
+    this.onChanged,
   });
 
   final TextEditingController controller;
@@ -14,6 +16,7 @@ class InputText extends StatelessWidget {
   final String label;
   final bool isFieldRequired;
   final bool isEnabled;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +44,7 @@ class InputText extends StatelessWidget {
           TextFormField(
             enabled: isEnabled,
             controller: controller,
+            onChanged: onChanged,
             decoration: InputDecoration(
               errorStyle: TextStyle(color: Colors.red),
               hintText: hintText ?? 'Enter details',

@@ -19,7 +19,8 @@ class InputNumber extends ConsumerStatefulWidget {
     required this.label,
     this.isRequired = true,
     this.onCountryCodeChanged,
-    this.isEnabled = true,this.code='+91',
+    this.isEnabled = true,
+    this.code = '+91',
   });
 
   @override
@@ -76,22 +77,24 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                     data: (codes) {
                       return DropdownButton<String>(
                         underline: SizedBox(),
-                        value:widget.isEnabled? selectedValue:widget.code,
+                        value: widget.isEnabled ? selectedValue : widget.code,
                         items: codes.map((code) {
                           return DropdownMenuItem(
                             value: code.label,
                             child: Text(code.label),
                           );
                         }).toList(),
-                        onChanged:widget.isEnabled? (value) {
-                          setState(() {
-                            selectedValue = value;
-                          });
-                          if (value != null &&
-                              widget.onCountryCodeChanged != null) {
-                            widget.onCountryCodeChanged!(value);
-                          }
-                        }:null,
+                        onChanged: widget.isEnabled
+                            ? (value) {
+                                setState(() {
+                                  selectedValue = value;
+                                });
+                                if (value != null &&
+                                    widget.onCountryCodeChanged != null) {
+                                  widget.onCountryCodeChanged!(value);
+                                }
+                              }
+                            : null,
                       );
                     },
                     loading: () =>
@@ -110,6 +113,7 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                   SizedBox(width: 8),
                   Expanded(
                     child: TextFormField(
+                      enabled: widget.isEnabled,
                       controller: controller,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(

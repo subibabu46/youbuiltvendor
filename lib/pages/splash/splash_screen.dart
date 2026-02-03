@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/pages/onboarding/onboarding_screen.dart';
 import 'package:design_task_1/pages/store_registration/register_step_2_screen.dart';
+import 'package:design_task_1/pages/store_registration/register_step_3_screen.dart';
+import 'package:design_task_1/pages/store_registration/send_otp_screen.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
@@ -20,14 +22,39 @@ class SplashScreen extends ConsumerWidget {
         if (!context.mounted) return;
 
         try {
-          final registerId = pref.getInt(step1Id);
-          SharedPrefCatch.instance.addInt(name: step1Id, value: registerId);
-          log('register step 1 Id: $registerId');
-          if (registerId != null) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const RegisterStep2Screen()),
-            );
+          final registerId = pref.getInt(stepId);
+          final registerLevel = pref.getInt(level);
+          final isOtpVerified = pref.getBool(otpVerified);
+          SharedPrefCatch.instance.addInt(name: stepId, value: registerId);
+          SharedPrefCatch.instance.addInt(name: level, value: registerLevel);
+          SharedPrefCatch.instance.addBool(
+            name: otpVerified,
+            value: isOtpVerified,
+          );
+          log('register step 1 Id: id: $registerId level: $registerLevel');
+          if (isOtpVerified != null && isOtpVerified) {
+            if (registerId != null) {
+              if (registerLevel == 1) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const RegisterStep2Screen(),
+                  ),
+                );
+              } else if (registerLevel == 2) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const RegisterStep3Screen(),
+                  ),
+                );
+              }
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const SendOtpScreen()),
+              );
+            }
           } else {
             Navigator.pushReplacement(
               context,

@@ -40,15 +40,21 @@ final countriesProvider = FutureProvider<List<GetModel>>((ref) async {
 });
 
 //State
-final statesProvider = FutureProvider<List<GetModel>>((ref) async {
+final statesProvider = FutureProvider.family<List<GetModel>, String>((
+  ref,
+  value,
+) async {
   final repository = ref.watch(storeRepositoryProvider);
-  return repository.fetchStates();
+  return repository.fetchStates(value);
 });
 
 //District
-final districtsProvider = FutureProvider<List<GetModel>>((ref) async {
+final districtsProvider = FutureProvider.family<List<GetModel>, String>((
+  ref,
+  value,
+) async {
   final repository = ref.watch(storeRepositoryProvider);
-  return repository.fetchDistricts();
+  return repository.fetchDistricts(value);
 });
 
 //Send Otp
@@ -77,8 +83,15 @@ final registerStep1Provider =
     });
 
 //Register Step 2
+class RegisterStep2Params {
+  final RegisterStep2Model model;
+  final int step1Id;
+
+  RegisterStep2Params({required this.model, required this.step1Id});
+}
+
 final registerStep2Provider =
-    Provider.family<Future<ResponseModel>, RegisterStep2Model>((ref, value) {
+    Provider.family<Future<ResponseModel>, RegisterStep2Params>((ref, params) {
       final repo = ref.read(storeRepositoryProvider);
-      return repo.registerStep2(value);
+      return repo.registerStep2(params.model, params.step1Id);
     });

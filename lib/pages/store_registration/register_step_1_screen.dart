@@ -169,7 +169,8 @@ class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
                   registerStep1Provider(registerStep1Info),
                 );
                 final pref = ref.watch(sharedPreferencesProvider).value;
-                pref?.setInt(step1Id, result.data?['Id']);
+                pref?.setInt(stepId, result.data?['Id']);
+                pref?.setInt(level, result.data?['completedLevel']);
                 if (context.mounted) {
                   if (result.status) {
                     messageTost(result.message, context);

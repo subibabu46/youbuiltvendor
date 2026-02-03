@@ -1,2 +1,3 @@
-const String step1Id = 'STEP_1_ID';
-const String step2Id = 'STEP_2_ID';
+const String stepId = 'STEP_ID';
+const String level = 'level';
+const String otpVerified = 'OTP_VER';

@@ -30,7 +30,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [SkipButton()],
+                children: [
+                  SkipButton(
+                    onPressed: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GetStartedScreen(),
+                      ),
+                      (route) => false,
+                    ),
+                  ),
+                ],
               ),
             ),
 

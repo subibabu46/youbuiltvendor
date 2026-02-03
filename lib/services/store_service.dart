@@ -53,9 +53,11 @@ class StoreService {
     }
   }
 
-  Future<Response> fetchStates() async {
+  Future<Response> fetchStates(String pinCode) async {
     try {
-      final response = await dio.get("/api/users/statesDropDown");
+      final response = await dio.get(
+        "/api/users/statesDropDown?pinCode=$pinCode",
+      );
 
       return response;
     } on DioException catch (e) {
@@ -68,9 +70,11 @@ class StoreService {
     }
   }
 
-  Future<Response> fetchDistricts() async {
+  Future<Response> fetchDistricts(String pinCode) async {
     try {
-      final response = await dio.get("/api/users/districtDropDown");
+      final response = await dio.get(
+        "/api/users/districtDropDown?pinCode=$pinCode",
+      );
 
       return response;
     } on DioException catch (e) {
@@ -131,10 +135,10 @@ class StoreService {
     }
   }
 
-  Future<Response> registerStep2(Map<String, dynamic> data) async {
+  Future<Response> registerStep2(Map<String, dynamic> data, int step1Id) async {
     try {
-      final response = await dio.post(
-        "/api/users/registrationStep2/82",
+      final response = await dio.patch(
+        "/api/users/registrationStep2/$step1Id",
         data: data,
       );
 

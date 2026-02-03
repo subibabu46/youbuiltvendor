@@ -6,7 +6,6 @@ class RegisterStep2Model {
   final String pinCode;
   final String state;
   final String district;
-  final int registerStep1Id;
 
   RegisterStep2Model({
     required this.address1,
@@ -16,7 +15,6 @@ class RegisterStep2Model {
     required this.pinCode,
     required this.state,
     required this.district,
-    required this.registerStep1Id,
   });
   Map<String, dynamic> toJson() {
     return {

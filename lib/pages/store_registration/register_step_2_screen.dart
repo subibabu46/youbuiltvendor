@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
@@ -33,14 +35,19 @@ class RegisterStep2Screen extends ConsumerStatefulWidget {
 }
 
 class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
-  String? country, state, district;
+  String? country, state, district, pinCode;
   final _formKey = GlobalKey<FormState>();
+  final controllers = _RegisterStep2Controllers();
   @override
   Widget build(BuildContext context) {
-    final controllers = _RegisterStep2Controllers();
     final countriesAsync = ref.watch(countriesProvider);
-    final statesAsync = ref.watch(statesProvider);
-    final districtsAsync = ref.watch(districtsProvider);
+
+    final statesAsync = pinCode != null && pinCode!.isNotEmpty
+        ? ref.watch(statesProvider(controllers.pinCode.text))
+        : null;
+    final districtsAsync = pinCode != null && pinCode!.isNotEmpty
+        ? ref.watch(districtsProvider(controllers.pinCode.text))
+        : null;
     return Scaffold(
       body: SafeArea(
         child: GestureDetector(
@@ -86,6 +93,13 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
                     InputText(
                       controller: controllers.pinCode,
                       label: 'Pin Code',
+                      onChanged: (value) {
+                        if (value.length == 6) {
+                          setState(() {
+                            pinCode = value;
+                          });
+                        }
+                      },
                     ),
                     InputSelect(
                       label: 'State',
@@ -117,9 +131,10 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
                 district == null) {
               messageTost('Fields shouldn\'t be empty', context);
             } else {
-              final registerStep1Id = SharedPrefCatch.instance.getInt(
-                name: step1Id,
+              final registerStep1Id = await SharedPrefCatch.instance.getInt(
+                name: stepId,
               );
+              log(registerStep1Id.toString());
               if (registerStep1Id == null) return;
               final registerStep2Info = RegisterStep2Model(
                 address1: controllers.address1.text,
@@ -129,14 +144,18 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
                 pinCode: controllers.pinCode.text,
                 state: state!,
                 district: district!,
-                registerStep1Id: registerStep1Id,
               );
               try {
                 final result = await ref.read(
-                  registerStep2Provider(registerStep2Info),
+                  registerStep2Provider(
+                    RegisterStep2Params(
+                      model: registerStep2Info,
+                      step1Id: registerStep1Id,
+                    ),
+                  ),
                 );
                 final pref = ref.watch(sharedPreferencesProvider).value;
-                pref?.setInt(step2Id, result.data?['Id']);
+                pref?.setInt(level, result.data?['completedLevel']);
                 if (context.mounted) {
                   if (result.status) {
                     messageTost(result.message, context);

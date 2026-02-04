@@ -1,10 +1,11 @@
 import 'dart:developer';
 
 import 'package:design_task_1/constants/shared_pref_names.dart';
+import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/pages/onboarding/onboarding_screen.dart';
+import 'package:design_task_1/pages/store_registration/register_step_1_screen.dart';
 import 'package:design_task_1/pages/store_registration/register_step_2_screen.dart';
 import 'package:design_task_1/pages/store_registration/register_step_3_screen.dart';
-import 'package:design_task_1/pages/store_registration/send_otp_screen.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +26,16 @@ class SplashScreen extends ConsumerWidget {
           final registerId = pref.getInt(stepId);
           final registerLevel = pref.getInt(level);
           final isOtpVerified = pref.getBool(otpVerified);
+          final isUserInfo = pref.getStringList(userInfoCache);
           SharedPrefCatch.instance.addInt(name: stepId, value: registerId);
           SharedPrefCatch.instance.addInt(name: level, value: registerLevel);
           SharedPrefCatch.instance.addBool(
             name: otpVerified,
             value: isOtpVerified,
+          );
+          SharedPrefCatch.instance.addStringList(
+            name: userInfoCache,
+            value: isUserInfo,
           );
           log('register step 1 Id: id: $registerId level: $registerLevel');
           if (isOtpVerified != null && isOtpVerified) {
@@ -49,13 +55,23 @@ class SplashScreen extends ConsumerWidget {
                   ),
                 );
               }
-            } else {
+            } else if (isUserInfo != null) {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => const SendOtpScreen()),
+                MaterialPageRoute(
+                  builder: (_) => RegisterStep1Screen(
+                    userInfo: UserModel(
+                      code: isUserInfo[0],
+                      name: isUserInfo[1],
+                      phoneNumber: isUserInfo[2],
+                      type: isUserInfo[3],
+                    ),
+                  ),
+                ),
               );
             }
           } else {
+            //TODO
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const OnboardingScreen()),

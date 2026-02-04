@@ -208,6 +208,12 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
               if (context.mounted) {
                 if (result.status) {
                   isOtpVerified = true;
+                  pref?.setStringList(userInfoCache, [
+                    userInfo.code,
+                    userInfo.name,
+                    userInfo.phoneNumber,
+                    userInfo.type,
+                  ]);
 
                   messageTost(result.message, context);
                   Future.delayed(const Duration(seconds: 3), () {

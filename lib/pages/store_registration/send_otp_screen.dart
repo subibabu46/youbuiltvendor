@@ -1,9 +1,11 @@
 import 'package:design_task_1/models/user_model.dart';
+import 'package:design_task_1/pages/error/check_internet_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_number.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_text.dart';
 import 'package:design_task_1/pages/store_registration/verify_otp_screen.dart';
 import 'package:design_task_1/pages/store_registration/provider/timer_provider.dart';
+import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
@@ -136,39 +138,54 @@ class _SendOtpScreenState extends ConsumerState<SendOtpScreen> {
                 if (!isValid) {
                   messageTost('Fields shouldn\'t be empty', context);
                 } else {
-                  final userInfo = UserModel(
-                    phoneNumber: numberController.text,
-                    name: controller.text,
-                    code: selectedCountryCode,
-                    type: "store",
-                  );
-                  try {
-                    final result = await ref.read(sendOtpProvider(userInfo));
-
+                  final isConnected = await ref
+                      .read(connectivityServiceProvider)
+                      .isConnected();
+                  if (!isConnected) {
                     if (context.mounted) {
-                      if (result.status) {
-                        timerNotifier.start();
-                        messageTost(result.message, context);
-                        Future.delayed(const Duration(seconds: 2), () {
-                          if (context.mounted) {
-                            {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      VerifyOtpScreen(userInfo: userInfo),
-                                ),
-                              );
-                            }
-                          }
-                        });
-                      } else {
-                        messageTost(result.message, context);
-                      }
+                      messageTost("No internet connection", context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CheckInternetScreen(),
+                        ),
+                      );
                     }
-                  } catch (e) {
-                    if (context.mounted) {
-                      messageTost(duration: 2, e.toString(), context);
+                  } else {
+                    final userInfo = UserModel(
+                      phoneNumber: numberController.text,
+                      name: controller.text,
+                      code: selectedCountryCode,
+                      type: "store",
+                    );
+                    try {
+                      final result = await ref.read(sendOtpProvider(userInfo));
+
+                      if (context.mounted) {
+                        if (result.status) {
+                          timerNotifier.start();
+                          messageTost(result.message, context);
+                          Future.delayed(const Duration(seconds: 2), () {
+                            if (context.mounted) {
+                              {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        VerifyOtpScreen(userInfo: userInfo),
+                                  ),
+                                );
+                              }
+                            }
+                          });
+                        } else {
+                          messageTost(result.message, context);
+                        }
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        messageTost(duration: 2, e.toString(), context);
+                      }
                     }
                   }
                 }

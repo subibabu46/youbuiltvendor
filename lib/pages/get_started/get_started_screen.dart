@@ -1,19 +1,22 @@
+import 'package:design_task_1/pages/error/check_internet_screen.dart';
 import 'package:design_task_1/pages/get_started/widgets/register_button.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/store_registration/send_otp_screen.dart';
+import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum Business { store, service }
 
-class GetStartedScreen extends StatefulWidget {
+class GetStartedScreen extends ConsumerStatefulWidget {
   const GetStartedScreen({super.key});
 
   @override
-  State<GetStartedScreen> createState() => _GetStartedScreenState();
+  ConsumerState<GetStartedScreen> createState() => _GetStartedScreenState();
 }
 
-class _GetStartedScreenState extends State<GetStartedScreen> {
+class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
   Business? selectedType;
   @override
   Widget build(BuildContext context) {
@@ -77,17 +80,34 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
         padding: const EdgeInsets.only(bottom: 64, left: 16, right: 16),
         child: NextButton(
           buttonText: 'Get Started',
-          onPressed: () {
+          onPressed: () async {
             if (selectedType == null) {
               messageTost("Please choose one to continue", context);
               return;
             }
             if (selectedType == Business.store) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SendOtpScreen()),
-              );
-            } else {}
+              final isConnected = await ref
+                  .read(connectivityServiceProvider)
+                  .isConnected();
+              if (!isConnected) {
+                if (context.mounted) {
+                  messageTost("No internet connection", context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CheckInternetScreen(),
+                    ),
+                  );
+                }
+              } else {
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SendOtpScreen()),
+                  );
+                }
+              }
+            }
           },
         ),
       ),

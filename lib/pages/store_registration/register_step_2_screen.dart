@@ -2,11 +2,13 @@ import 'dart:developer';
 
 import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
+import 'package:design_task_1/pages/error/check_internet_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/store_registration/register_step_3_screen.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_select.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_text.dart';
 import 'package:design_task_1/pages/store_registration/widgets/steps_bubbles.dart';
+import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
@@ -131,53 +133,68 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
                 district == null) {
               messageTost('Fields shouldn\'t be empty', context);
             } else {
-              final registerStep1Id = await SharedPrefCatch.instance.getInt(
-                name: stepId,
-              );
-              log(registerStep1Id.toString());
-              if (registerStep1Id == null) return;
-              final registerStep2Info = RegisterStep2Model(
-                address1: controllers.address1.text,
-                address2: controllers.address2.text,
-                location: controllers.location.text,
-                country: country!,
-                pinCode: controllers.pinCode.text,
-                state: state!,
-                district: district!,
-              );
-              try {
-                final result = await ref.read(
-                  registerStep2Provider(
-                    RegisterStep2Params(
-                      model: registerStep2Info,
-                      step1Id: registerStep1Id,
+              final isConnected = await ref
+                  .read(connectivityServiceProvider)
+                  .isConnected();
+              if (!isConnected) {
+                if (context.mounted) {
+                  messageTost("No internet connection", context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CheckInternetScreen(),
                     ),
-                  ),
-                );
-                final pref = ref.watch(sharedPreferencesProvider).value;
-                pref?.setInt(level, result.data?['completedLevel']);
-                if (context.mounted) {
-                  if (result.status) {
-                    messageTost(result.message, context);
-                    Future.delayed(const Duration(seconds: 2), () {
-                      if (context.mounted) {
-                        {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegisterStep3Screen(),
-                            ),
-                          );
-                        }
-                      }
-                    });
-                  } else {
-                    messageTost(result.message, context);
-                  }
+                  );
                 }
-              } catch (e) {
-                if (context.mounted) {
-                  messageTost(duration: 2, e.toString(), context);
+              } else {
+                final registerStep1Id = await SharedPrefCatch.instance.getInt(
+                  name: stepId,
+                );
+                log(registerStep1Id.toString());
+                if (registerStep1Id == null) return;
+                final registerStep2Info = RegisterStep2Model(
+                  address1: controllers.address1.text,
+                  address2: controllers.address2.text,
+                  location: controllers.location.text,
+                  country: country!,
+                  pinCode: controllers.pinCode.text,
+                  state: state!,
+                  district: district!,
+                );
+                try {
+                  final result = await ref.read(
+                    registerStep2Provider(
+                      RegisterStep2Params(
+                        model: registerStep2Info,
+                        step1Id: registerStep1Id,
+                      ),
+                    ),
+                  );
+                  final pref = ref.watch(sharedPreferencesProvider).value;
+                  pref?.setInt(level, result.data?['completedLevel']);
+                  if (context.mounted) {
+                    if (result.status) {
+                      messageTost(result.message, context);
+                      Future.delayed(const Duration(seconds: 2), () {
+                        if (context.mounted) {
+                          {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterStep3Screen(),
+                              ),
+                            );
+                          }
+                        }
+                      });
+                    } else {
+                      messageTost(result.message, context);
+                    }
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    messageTost(duration: 2, e.toString(), context);
+                  }
                 }
               }
             }

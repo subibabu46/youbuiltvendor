@@ -1,12 +1,14 @@
 import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/models/register_step_1_model.dart';
 import 'package:design_task_1/models/user_model.dart';
+import 'package:design_task_1/pages/error/check_internet_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/store_registration/register_step_2_screen.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_number.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_select.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_text.dart';
 import 'package:design_task_1/pages/store_registration/widgets/steps_bubbles.dart';
+import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
@@ -148,51 +150,66 @@ class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
             if (!isValid || businessType == null) {
               messageTost('Fields shouldn\'t be empty', context);
             } else {
-              final registerStep1Info = RegisterStep1Model(
-                businessName: controllers.businessName.text,
-                ownerName: controllers.ownerName.text,
-                businessEmail: controllers.businessEmail.text,
-                ownerEmail: controllers.ownerEmail.text,
-                companyOfficialNumber: controllers.companyOfficialNumber.text,
-                phoneNumber: controllers.phoneNumber.text,
-                code: code ?? '+91',
-                companyPANNumber: controllers.companyPanNumber.text,
-                ownerPanNumber: controllers.ownerPanNumber.text,
-                gstNumber: controllers.gstNumber.text,
-                ownerIdNumber: controllers.ownerIdNumber.text,
-                type: 'store',
-                companyOfficialNumberCode: officialNumberCode ?? '+91',
-                businessType: businessType!,
-              );
-              try {
-                final result = await ref.read(
-                  registerStep1Provider(registerStep1Info),
-                );
-                final pref = ref.watch(sharedPreferencesProvider).value;
-                pref?.setInt(stepId, result.data?['Id']);
-                pref?.setInt(level, result.data?['completedLevel']);
+              final isConnected = await ref
+                  .read(connectivityServiceProvider)
+                  .isConnected();
+              if (!isConnected) {
                 if (context.mounted) {
-                  if (result.status) {
-                    messageTost(result.message, context);
-                    Future.delayed(const Duration(seconds: 2), () {
-                      if (context.mounted) {
-                        {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegisterStep2Screen(),
-                            ),
-                          );
-                        }
-                      }
-                    });
-                  } else {
-                    messageTost(result.message, context);
-                  }
+                  messageTost("No internet connection", context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CheckInternetScreen(),
+                    ),
+                  );
                 }
-              } catch (e) {
-                if (context.mounted) {
-                  messageTost(duration: 2, e.toString(), context);
+              } else {
+                final registerStep1Info = RegisterStep1Model(
+                  businessName: controllers.businessName.text,
+                  ownerName: controllers.ownerName.text,
+                  businessEmail: controllers.businessEmail.text,
+                  ownerEmail: controllers.ownerEmail.text,
+                  companyOfficialNumber: controllers.companyOfficialNumber.text,
+                  phoneNumber: controllers.phoneNumber.text,
+                  code: code ?? '+91',
+                  companyPANNumber: controllers.companyPanNumber.text,
+                  ownerPanNumber: controllers.ownerPanNumber.text,
+                  gstNumber: controllers.gstNumber.text,
+                  ownerIdNumber: controllers.ownerIdNumber.text,
+                  type: 'store',
+                  companyOfficialNumberCode: officialNumberCode ?? '+91',
+                  businessType: businessType!,
+                );
+                try {
+                  final result = await ref.read(
+                    registerStep1Provider(registerStep1Info),
+                  );
+                  final pref = ref.watch(sharedPreferencesProvider).value;
+                  pref?.setInt(stepId, result.data?['Id']);
+                  pref?.setInt(level, result.data?['completedLevel']);
+                  if (context.mounted) {
+                    if (result.status) {
+                      messageTost(result.message, context);
+                      Future.delayed(const Duration(seconds: 2), () {
+                        if (context.mounted) {
+                          {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterStep2Screen(),
+                              ),
+                            );
+                          }
+                        }
+                      });
+                    } else {
+                      messageTost(result.message, context);
+                    }
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    messageTost(duration: 2, e.toString(), context);
+                  }
                 }
               }
             }

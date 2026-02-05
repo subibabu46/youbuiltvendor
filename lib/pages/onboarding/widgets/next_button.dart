@@ -5,9 +5,11 @@ class NextButton extends StatelessWidget {
     super.key,
     required this.buttonText,
     required this.onPressed,
+    this.loading,
   });
   final VoidCallback onPressed;
   final String buttonText;
+  final bool? loading;
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +23,23 @@ class NextButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
 
-        child: Text(
-          buttonText,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
-          ),
-          textAlign: TextAlign.center,
-        ),
+        child: loading != null && loading == true
+            ? Center(
+                child: SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
+              )
+            : Text(
+                buttonText,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
       ),
     );
   }

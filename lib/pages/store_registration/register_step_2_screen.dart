@@ -147,11 +147,11 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
                   );
                 }
               } else {
-                final registerStep1Id = await SharedPrefCatch.instance.getInt(
+                final registerStepId = await SharedPrefCatch.instance.getInt(
                   name: stepId,
                 );
-                log(registerStep1Id.toString());
-                if (registerStep1Id == null) return;
+                log(registerStepId.toString());
+                if (registerStepId == null) return;
                 final registerStep2Info = RegisterStep2Model(
                   address1: controllers.address1.text,
                   address2: controllers.address2.text,
@@ -166,7 +166,7 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
                     registerStep2Provider(
                       RegisterStep2Params(
                         model: registerStep2Info,
-                        step1Id: registerStep1Id,
+                        stepId: registerStepId,
                       ),
                     ),
                   );

@@ -2,6 +2,7 @@ import 'package:design_task_1/models/get_model.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/register_step_1_model.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
+import 'package:design_task_1/models/register_step_3_model.dart';
 import 'package:design_task_1/models/response_model.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/repository/store_repository.dart';
@@ -85,13 +86,27 @@ final registerStep1Provider =
 //Register Step 2
 class RegisterStep2Params {
   final RegisterStep2Model model;
-  final int step1Id;
+  final int stepId;
 
-  RegisterStep2Params({required this.model, required this.step1Id});
+  RegisterStep2Params({required this.model, required this.stepId});
 }
 
 final registerStep2Provider =
     Provider.family<Future<ResponseModel>, RegisterStep2Params>((ref, params) {
       final repo = ref.read(storeRepositoryProvider);
-      return repo.registerStep2(params.model, params.step1Id);
+      return repo.registerStep2(params.model, params.stepId);
+    });
+
+//Register Step 2
+class RegisterStep3Params {
+  final RegisterStep3Model model;
+  final int stepId;
+
+  RegisterStep3Params({required this.model, required this.stepId});
+}
+
+final registerStep3Provider =
+    Provider.family<Future<ResponseModel>, RegisterStep3Params>((ref, params) {
+      final repo = ref.read(storeRepositoryProvider);
+      return repo.registerStep3(params.model, params.stepId);
     });

@@ -3,6 +3,7 @@ import 'package:design_task_1/models/get_model.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/register_step_1_model.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
+import 'package:design_task_1/models/register_step_3_model.dart';
 import 'package:design_task_1/models/response_model.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/services/store_service.dart';
@@ -169,11 +170,11 @@ class StoreRepository {
 
   Future<ResponseModel> registerStep2(
     RegisterStep2Model registerStep2Info,
-    step1Id,
+    stepId,
   ) async {
     try {
       final data = registerStep2Info.toJson();
-      final response = await storeService.registerStep2(data, step1Id);
+      final response = await storeService.registerStep2(data, stepId);
       log('registerStep2: ${response.data}');
 
       if (response.statusCode == 200) {
@@ -183,6 +184,26 @@ class StoreRepository {
       return ResponseModel.fromJson(response.data);
     } catch (e) {
       log('registerStep2: $e');
+      rethrow;
+    }
+  }
+
+  Future<ResponseModel> registerStep3(
+    RegisterStep3Model registerStep3Info,
+    stepId,
+  ) async {
+    try {
+      final data = registerStep3Info.toJson();
+      final response = await storeService.registerStep3(data, stepId);
+      log('registerStep3: ${response.data}');
+
+      if (response.statusCode == 200) {
+        return ResponseModel.fromJson(response.data);
+      }
+
+      return ResponseModel.fromJson(response.data);
+    } catch (e) {
+      log('registerStep3: $e');
       rethrow;
     }
   }

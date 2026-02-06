@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
+
 class StoreService {
   late final Dio dio = Dio(
     BaseOptions(
@@ -158,34 +161,64 @@ class StoreService {
   Future<Response> registerStep3(Map<String, dynamic> data, int stepId) async {
     try {
       final formData = FormData();
+
+      print('=== Starting registerStep3 ===');
+      print('Step ID: $stepId');
+
       for (var entry in data.entries) {
-        if (entry.value is File) {
+        final value = entry.value;
+        if (value == null) continue;
+
+        if (value is File) {
+          final mimeType =
+              lookupMimeType(value.path) ?? 'application/octet-stream';
+          final parts = mimeType.split('/');
+
           formData.files.add(
             MapEntry(
               entry.key,
               await MultipartFile.fromFile(
-                (entry.value as File).path,
-                filename: (entry.value as File).path.split('/').last,
+                value.path,
+                filename: value.path.split('/').last,
+                contentType: MediaType(parts[0], parts[1]),
               ),
             ),
           );
-        } else if (entry.value != null) {
-          formData.fields.add(MapEntry(entry.key, entry.value.toString()));
+        } else {
+          formData.fields.add(MapEntry(entry.key, value.toString()));
         }
       }
 
       final response = await dio.patch(
         "/api/users/registrationStep3/$stepId",
         data: formData,
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
       );
 
       return response;
     } on DioException catch (e) {
+      print('DioException details:');
+      print('Status code: ${e.response?.statusCode}');
+      print('Response data: ${e.response?.data}');
+      print('Error type: ${e.type}');
+
+      // Extract more specific error message
+      if (e.response?.statusCode == 500) {
+        final errorData = e.response?.data;
+        if (errorData is Map && errorData.containsKey('error')) {
+          final error = errorData['error'];
+          if (error is Map && error.containsKey('name')) {
+            throw 'Server validation error: ${error['name']}. Please contact support.';
+          }
+        }
+        throw 'Server error occurred. Please try again later.';
+      }
+
       final message =
           e.response?.data['message'] ?? e.message ?? 'Something went wrong';
-
       throw message;
     } catch (e) {
+      print('Unexpected error: $e');
       throw 'Unexpected error occurred';
     }
   }

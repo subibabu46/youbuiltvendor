@@ -4,9 +4,8 @@ import 'dart:io';
 import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/models/register_step_3_model.dart';
 import 'package:design_task_1/pages/error/check_internet_screen.dart';
-import 'package:design_task_1/pages/onboarding/onboarding_screen.dart';
+import 'package:design_task_1/pages/home/home_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/store_registration/register_step_1_screen.dart';
 import 'package:design_task_1/pages/store_registration/widgets/steps_bubbles.dart';
 import 'package:design_task_1/pages/store_registration/widgets/upload_file.dart';
 import 'package:design_task_1/providers/connectivity_provider.dart';
@@ -142,7 +141,7 @@ class _RegisterStep3ScreenState extends ConsumerState<RegisterStep3Screen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => OnboardingScreen(),
+                                builder: (context) => HomeScreen(),
                               ),
                             );
                           }

@@ -2,13 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:design_task_1/constants/shared_pref_names.dart';
+import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/user_model.dart';
-import 'package:design_task_1/pages/error/check_internet_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/store_registration/register_step_1_screen.dart';
 import 'package:design_task_1/pages/store_registration/provider/timer_provider.dart';
-import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
@@ -197,63 +196,49 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
             if (!isValid) {
               return;
             }
-            final isConnected = await ref
-                .read(connectivityServiceProvider)
-                .isConnected();
-            if (!isConnected) {
+            if (!await checkConnection(context, ref)) return;
+            final otpInfo = OtpModel(
+              phoneNumber: userInfo.phoneNumber,
+              otp: otp,
+              code: userInfo.code,
+              type: userInfo.type,
+            );
+            try {
+              final result = await ref.read(verifyOtpProvider(otpInfo));
+              final pref = ref.watch(sharedPreferencesProvider).value;
+              pref?.setBool(otpVerified, result.status);
               if (context.mounted) {
-                messageTost("No internet connection", context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CheckInternetScreen(),
-                  ),
-                );
-              }
-            } else {
-              final otpInfo = OtpModel(
-                phoneNumber: userInfo.phoneNumber,
-                otp: otp,
-                code: userInfo.code,
-                type: userInfo.type,
-              );
-              try {
-                final result = await ref.read(verifyOtpProvider(otpInfo));
-                final pref = ref.watch(sharedPreferencesProvider).value;
-                pref?.setBool(otpVerified, result.status);
-                if (context.mounted) {
-                  if (result.status) {
-                    isOtpVerified = true;
-                    pref?.setStringList(userInfoCache, [
-                      userInfo.code,
-                      userInfo.name,
-                      userInfo.phoneNumber,
-                      userInfo.type,
-                    ]);
+                if (result.status) {
+                  isOtpVerified = true;
+                  pref?.setStringList(userInfoCache, [
+                    userInfo.code,
+                    userInfo.name,
+                    userInfo.phoneNumber,
+                    userInfo.type,
+                  ]);
 
-                    messageTost(result.message, context);
-                    Future.delayed(const Duration(seconds: 3), () {
-                      if (context.mounted) {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                RegisterStep1Screen(userInfo: userInfo),
-                          ),
-                          (route) => false,
-                        );
-                      }
-                    });
-                  } else {
-                    messageTost(result.message, context);
-                  }
+                  messageTost(result.message, context);
+                  Future.delayed(const Duration(seconds: 3), () {
+                    if (context.mounted) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              RegisterStep1Screen(userInfo: userInfo),
+                        ),
+                        (route) => false,
+                      );
+                    }
+                  });
+                } else {
+                  messageTost(result.message, context);
                 }
-              } catch (e) {
-                if (context.mounted) {
-                  messageTost(duration: 2, e.toString(), context);
-                }
-                log(e.toString());
               }
+            } catch (e) {
+              if (context.mounted) {
+                messageTost(duration: 2, e.toString(), context);
+              }
+              log(e.toString());
             }
           },
         ),

@@ -3,26 +3,20 @@ class ResponseModel {
   final String message;
   final Map<String, dynamic>? data;
 
-  ResponseModel({
-    required this.status,
-    required this.message,
-    required this.data,
-  });
+  ResponseModel({required this.status, required this.message, this.data});
 
-  factory ResponseModel.fromJson(Map<String, dynamic> json) {
-    final status = json['status'];
-    bool statusBool;
-    if (status == 200) {
-      statusBool = true;
-    } else if (status is bool) {
-      statusBool = status;
-    } else {
-      statusBool = false;
-    }
-
+  factory ResponseModel.success(Map<String, dynamic> json) {
     return ResponseModel(
-      status: statusBool,
-      message: json['message'] ?? '',
+      status: true,
+      message: json['message'] ?? 'Success',
+      data: json['data'],
+    );
+  }
+
+  factory ResponseModel.error(Map<String, dynamic> json) {
+    return ResponseModel(
+      status: false,
+      message: json['message'] ?? 'Success',
       data: json['data'],
     );
   }

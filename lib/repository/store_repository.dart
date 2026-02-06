@@ -7,6 +7,7 @@ import 'package:design_task_1/models/register_step_3_model.dart';
 import 'package:design_task_1/models/response_model.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/services/store_service.dart';
+import 'package:dio/dio.dart';
 
 class StoreRepository {
   final StoreService storeService;
@@ -121,10 +122,12 @@ class StoreRepository {
       final data = userInfo.toJson();
       final response = await storeService.sendOtp(data);
       log('sendOtp: ${response.data}');
-      if (response.statusCode == 200) {
-        return ResponseModel.fromJson(response.data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ResponseModel.success(response.data);
+      } else if (response.statusCode == 400 || response.statusCode == 404) {
+        return ResponseModel.error(response.data);
       } else {
-        return ResponseModel.fromJson(response.data);
+        return ResponseModel.error(response.data);
       }
     } catch (e) {
       log('sendOtp: $e');
@@ -139,10 +142,10 @@ class StoreRepository {
       log('verifyOtp: ${response.data}');
 
       if (response.statusCode == 200) {
-        return ResponseModel.fromJson(response.data);
+        return ResponseModel.success(response.data);
       }
 
-      return ResponseModel.fromJson(response.data);
+      return ResponseModel.error(response.data);
     } catch (e) {
       log('verifyOtp: $e');
       rethrow;
@@ -152,59 +155,98 @@ class StoreRepository {
   Future<ResponseModel> registerStep1(
     RegisterStep1Model registerStep1Info,
   ) async {
-    try {
-      final data = registerStep1Info.toJson();
-      final response = await storeService.registerStep1(data);
-      log('registerStep1: ${response.data}');
+    final data = registerStep1Info.toJson();
 
-      if (response.statusCode == 200) {
-        return ResponseModel.fromJson(response.data);
-      }
-
-      return ResponseModel.fromJson(response.data);
-    } catch (e) {
-      log('registerStep1: $e');
-      rethrow;
-    }
+    return _apiCallHelper(
+      'registerStep1',
+      data,
+      () => storeService.registerStep1(data),
+    );
   }
 
   Future<ResponseModel> registerStep2(
     RegisterStep2Model registerStep2Info,
     stepId,
-  ) async {
-    try {
-      final data = registerStep2Info.toJson();
-      final response = await storeService.registerStep2(data, stepId);
-      log('registerStep2: ${response.data}');
+  ) {
+    final data = registerStep2Info.toJson();
+    return _apiCallHelper(
+      'registerStep2',
 
-      if (response.statusCode == 200) {
-        return ResponseModel.fromJson(response.data);
-      }
-
-      return ResponseModel.fromJson(response.data);
-    } catch (e) {
-      log('registerStep2: $e');
-      rethrow;
-    }
+      data,
+      () => storeService.registerStep2(data, stepId),
+      id: stepId,
+    );
   }
 
   Future<ResponseModel> registerStep3(
     RegisterStep3Model registerStep3Info,
-    stepId,
-  ) async {
-    try {
-      final data = registerStep3Info.toJson();
-      final response = await storeService.registerStep3(data, stepId);
-      log('registerStep3: ${response.data}');
+    int stepId,
+  ) {
+    final data = registerStep3Info.toJson();
+    return _apiCallHelper(
+      'registerStep3',
 
-      if (response.statusCode == 200) {
-        return ResponseModel.fromJson(response.data);
+      data,
+      () => storeService.registerStep3(data, stepId),
+      id: stepId,
+    );
+  }
+
+  Future<ResponseModel> _apiCallHelper(
+    String name,
+
+    dynamic inputData,
+    Future<Response> Function() apiCall, {
+    int? id,
+  }) async {
+    try {
+      log('=== Starting $name ===');
+      log('Step ID: $id');
+      log('Data: $inputData');
+
+      final response = await apiCall();
+
+      log('API call completed. Status code: ${response.statusCode}');
+      log('Response data: ${response.data}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log('$name successful');
+        return ResponseModel.success(response.data);
+      } else if (response.statusCode == 400 || response.statusCode == 404) {
+        log('$name returned client error');
+        return ResponseModel.error(response.data);
       }
 
-      return ResponseModel.fromJson(response.data);
+      log('$name unexpected status code: ${response.statusCode}');
+      throw 'Unexpected status code: ${response.statusCode}';
+    } on DioException catch (e) {
+      log('DioException occurred in $name');
+      log('Status code: ${e.response?.statusCode}');
+      log('Response data: ${e.response?.data}');
+      log('Error type: ${e.type}');
+
+      final statusCode = e.response?.statusCode;
+      final responseData = e.response?.data;
+
+      if (statusCode == 500) {
+        final error = responseData?['error'];
+        if (error is Map && error['name'] != null) {
+          log('Server validation error: ${error['name']}');
+          throw 'Server validation error: ${error['name']}';
+        }
+        log('Server error occurred. Please try again later.');
+        throw 'Server error occurred. Please try again later.';
+      }
+
+      final message =
+          responseData?['message'] ??
+          responseData?['error'] ??
+          'Something went wrong';
+      log('Error message: $message');
+      throw message;
     } catch (e) {
-      log('registerStep3: $e');
-      rethrow;
+      log('Unexpected exception in $name: $e');
+      throw e.toString();
     }
   }
 }

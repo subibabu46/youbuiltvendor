@@ -28,6 +28,18 @@ class _InputSelectState extends State<InputSelect> {
   bool _hasError = false;
   GetModel? selectedValue;
   @override
+  void didUpdateWidget(covariant InputSelect oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.asyncList != widget.asyncList) {
+      setState(() {
+        selectedValue = null;
+        _hasError = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -78,12 +90,14 @@ class _InputSelectState extends State<InputSelect> {
                         isExpanded: true,
                         underline: SizedBox(),
                         value: selectedValue,
-                        items: data.map((e) {
-                          return DropdownMenuItem(
-                            value: e,
-                            child: Text(e.label),
-                          );
-                        }).toList(),
+                        items: data.isNotEmpty
+                            ? data.map((e) {
+                                return DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e.label),
+                                );
+                              }).toList()
+                            : [],
 
                         onChanged: (value) {
                           if (value == null ||
@@ -105,7 +119,22 @@ class _InputSelectState extends State<InputSelect> {
                           }
                         },
                       ),
-                      loading: () => Center(child: CircularProgressIndicator()),
+                      loading: () => SizedBox(
+                        height: 44,
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            textAlign: TextAlign.left,
+                            'Select details',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Color(0xffa3a3a3),
+                            ),
+                          ),
+                        ),
+                      ),
                       error: (error, stackTrace) => Center(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -121,6 +150,7 @@ class _InputSelectState extends State<InputSelect> {
                       ),
                     )
                   : SizedBox(
+                      height: 44,
                       width: double.infinity,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),

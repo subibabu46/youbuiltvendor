@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/models/user_model.dart';
+import 'package:design_task_1/pages/home/home_screen.dart';
 import 'package:design_task_1/pages/onboarding/onboarding_screen.dart';
 import 'package:design_task_1/pages/store_registration/register_step_1_screen.dart';
 import 'package:design_task_1/pages/store_registration/register_step_2_screen.dart';
@@ -25,10 +26,15 @@ class SplashScreen extends ConsumerWidget {
         try {
           final registerId = pref.getInt(stepId);
           final registerLevel = pref.getInt(level);
+          final accessTokenId = pref.getString(accessToken);
           final isOtpVerified = pref.getBool(otpVerified);
           final isUserInfo = pref.getStringList(userInfoCache);
           SharedPrefCatch.instance.addInt(name: stepId, value: registerId);
           SharedPrefCatch.instance.addInt(name: level, value: registerLevel);
+          SharedPrefCatch.instance.addString(
+            name: accessToken,
+            value: accessTokenId,
+          );
           SharedPrefCatch.instance.addBool(
             name: otpVerified,
             value: isOtpVerified,
@@ -37,7 +43,9 @@ class SplashScreen extends ConsumerWidget {
             name: userInfoCache,
             value: isUserInfo,
           );
-          log('register step 1 Id: id: $registerId level: $registerLevel');
+          log(
+            'register Id: $registerId, completed level: $registerLevel, accessToken: $accessTokenId',
+          );
           if (isOtpVerified != null && isOtpVerified) {
             if (registerId != null) {
               if (registerLevel == 1) {
@@ -54,12 +62,10 @@ class SplashScreen extends ConsumerWidget {
                     builder: (_) => const RegisterStep3Screen(),
                   ),
                 );
-              } else {
+              } else if (registerLevel == 3 && accessTokenId != null) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const RegisterStep3Screen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const HomeScreen()),
                 );
               }
             } else if (isUserInfo != null) {
@@ -78,7 +84,6 @@ class SplashScreen extends ConsumerWidget {
               );
             }
           } else {
-            //TODO
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const OnboardingScreen()),

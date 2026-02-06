@@ -2,13 +2,12 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:design_task_1/constants/shared_pref_names.dart';
+import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/register_step_3_model.dart';
-import 'package:design_task_1/pages/error/check_internet_screen.dart';
 import 'package:design_task_1/pages/home/home_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/store_registration/widgets/steps_bubbles.dart';
 import 'package:design_task_1/pages/store_registration/widgets/upload_file.dart';
-import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
@@ -85,82 +84,67 @@ class _RegisterStep3ScreenState extends ConsumerState<RegisterStep3Screen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 64, left: 16, right: 16),
-        child: NextButton(
-          buttonText: 'Confirm',
-          onPressed: () async {
-            if (businessLogo == null ||
-                companyPanCard == null ||
-                ownerPanCard == null ||
-                ownerIdCard == null ||
-                gstCertificate == null) {
-              messageTost('Fields shouldn\'t be empty', context);
-            } else {
-              final isConnected = await ref
-                  .read(connectivityServiceProvider)
-                  .isConnected();
-              if (!isConnected) {
-                if (context.mounted) {
-                  messageTost("No internet connection", context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CheckInternetScreen(),
-                    ),
-                  );
-                }
-              } else {
-                final registerStepId = await SharedPrefCatch.instance.getInt(
-                  name: stepId,
-                );
-                log(registerStepId.toString());
-                if (registerStepId == null) return;
-                final registerStep3Info = RegisterStep3Model(
-                  businessLogo: businessLogo!,
-                  companyPanCard: companyPanCard!,
-                  ownerPanCard: ownerPanCard!,
-                  ownerIdCard: ownerIdCard!,
-                  gstCertificate: gstCertificate!,
-                );
-                try {
-                  final result = await ref.read(
-                    registerStep3Provider(
-                      RegisterStep3Params(
-                        model: registerStep3Info,
-                        stepId: registerStepId,
-                      ),
-                    ),
-                  );
-                  final pref = ref.watch(sharedPreferencesProvider).value;
-                  pref?.setInt(level, result.data?['completedLevel']);
-                  if (context.mounted) {
-                    if (result.status) {
-                      messageTost(result.message, context);
-                      Future.delayed(const Duration(seconds: 2), () {
-                        if (context.mounted) {
-                          {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
-                              ),
-                            );
-                          }
-                        }
-                      });
-                    } else {
-                      messageTost(result.message, context);
-                    }
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    messageTost(duration: 2, e.toString(), context);
-                  }
-                }
-              }
-            }
-          },
-        ),
+        child: NextButton(buttonText: 'Confirm', onPressed: _confirmCall),
       ),
     );
+  }
+
+  Future<void> _confirmCall() async {
+    if (businessLogo == null ||
+        companyPanCard == null ||
+        ownerPanCard == null ||
+        ownerIdCard == null ||
+        gstCertificate == null) {
+      messageTost('Fields shouldn\'t be empty', context);
+    } else {
+      if (!await checkConnection(context, ref)) return;
+
+      final registerStepId = await SharedPrefCatch.instance.getInt(
+        name: stepId,
+      );
+      log(registerStepId.toString());
+      if (registerStepId == null) return;
+      final registerStep3Info = RegisterStep3Model(
+        businessLogo: businessLogo!,
+        companyPanCard: companyPanCard!,
+        ownerPanCard: ownerPanCard!,
+        ownerIdCard: ownerIdCard!,
+        gstCertificate: gstCertificate!,
+      );
+      try {
+        final result = await ref.read(
+          registerStep3Provider(
+            RegisterStep3Params(
+              model: registerStep3Info,
+              stepId: registerStepId,
+            ),
+          ),
+        );
+        final pref = ref.watch(sharedPreferencesProvider).value;
+        pref?.setInt(level, result.data?['completedLevel']);
+        pref?.setString(accessToken, result.data?['accessToken']);
+        if (mounted) {
+          if (result.status) {
+            messageTost(result.message, context);
+            Future.delayed(const Duration(seconds: 2), () {
+              if (mounted) {
+                {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
+                }
+              }
+            });
+          } else {
+            messageTost(result.message, context);
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          messageTost(duration: 2, e.toString(), context);
+        }
+      }
+    }
   }
 }

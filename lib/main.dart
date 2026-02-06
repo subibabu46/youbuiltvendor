@@ -1,4 +1,6 @@
 import 'package:design_task_1/pages/splash/splash_screen.dart';
+import 'package:design_task_1/pages/store_registration/register_step_3_screen.dart';
+import 'package:design_task_1/pages/store_registration/send_otp_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,7 +25,8 @@ class MyApp extends StatelessWidget {
             bodyLarge: TextStyle(fontFamily: 'Urbanist'),
           ),
         ),
-        home: SplashScreen(),
+        home:
+            SplashScreen(), //SendOtpScreen(), //RegisterStep3Screen(), //SplashScreen(),
       ),
     );
   }

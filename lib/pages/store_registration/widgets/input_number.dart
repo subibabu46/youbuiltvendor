@@ -70,13 +70,13 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                 color: _hasError ? Colors.red : const Color(0xffc1c1c1),
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                children: [
-                  countryCodesAsync.when(
-                    data: (codes) {
-                      return DropdownButton<String>(
+            child: Row(
+              children: [
+                countryCodesAsync.when(
+                  data: (codes) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: DropdownButton<String>(
                         underline: SizedBox(),
                         value: widget.isEnabled ? selectedValue : widget.code,
                         items: codes.map((code) {
@@ -96,49 +96,49 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                                 }
                               }
                             : null,
-                      );
-                    },
-                    loading: () =>
-                        ShimmerEffect(width: 50, height: 50, radius: 6),
-                    error: (error, stack) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        messageTost('Something went wrong', context);
-                      });
-
-                      return Center(child: Text('+ '));
-                    },
-                  ),
-                  SizedBox(width: 8),
-                  Container(width: 1, height: 24, color: Color(0xffe0e0e0)),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: TextFormField(
-                      enabled: widget.isEnabled,
-                      controller: controller,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: hintText ?? 'Enter details',
-                        hintStyle: TextStyle(
-                          color: Color(0xffa3a3a3),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        errorStyle: const TextStyle(height: 0, fontSize: 0),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          setState(() => _hasError = true);
-                          return 'Enter Your $label';
-                        }
+                    );
+                  },
+                  loading: () =>
+                      ShimmerEffect(width: 50, height: 50, radius: 6),
+                  error: (error, stack) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      messageTost('Something went wrong', context);
+                    });
 
-                        setState(() => _hasError = false);
-                        return null;
-                      },
+                    return Center(child: Text('+ '));
+                  },
+                ),
+                SizedBox(width: 8),
+                Container(width: 1, height: 24, color: Color(0xffe0e0e0)),
+                SizedBox(width: 8),
+                Expanded(
+                  child: TextFormField(
+                    enabled: widget.isEnabled,
+                    controller: controller,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: hintText ?? 'Enter details',
+                      hintStyle: TextStyle(
+                        color: Color(0xffa3a3a3),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      errorStyle: const TextStyle(height: 0, fontSize: 0),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        setState(() => _hasError = true);
+                        return 'Enter Your $label';
+                      }
+
+                      setState(() => _hasError = false);
+                      return null;
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           if (_hasError)

@@ -21,12 +21,21 @@ class UploadFile extends ConsumerStatefulWidget {
   final bool isRequired;
   final bool showFile;
   final ValueChanged<File?> onPressed;
+
   @override
   ConsumerState<UploadFile> createState() => _UploadFileState();
 }
 
 class _UploadFileState extends ConsumerState<UploadFile> {
   File? selectedFile;
+  bool isFileVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isFileVisible = widget.showFile;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -48,20 +57,34 @@ class _UploadFileState extends ConsumerState<UploadFile> {
               ],
             ),
           ),
-          if (widget.showFile)
+          if (selectedFile != null && widget.showFile && isFileVisible)
             Padding(
               padding: EdgeInsetsGeometry.symmetric(vertical: 8),
-              child: Container(
-                width: 160,
-                height: 160,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(width: 1, color: Color(0xffd1d5db)),
-                  color: Color(0xfff4f4f4),
-                ),
-                child: selectedFile != null
-                    ? Image.file(selectedFile!, fit: BoxFit.contain)
-                    : null,
+              child: Stack(
+                children: [
+                  Container(
+                    width: 160,
+                    height: 160,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(width: 1, color: Color(0xffd1d5db)),
+                      color: Color(0xfff4f4f4),
+                    ),
+                    child: selectedFile != null
+                        ? Image.file(selectedFile!, fit: BoxFit.contain)
+                        : null,
+                  ),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() => isFileVisible = false);
+                      },
+                      icon: Icon(Icons.close, color: Colors.grey),
+                    ),
+                  ),
+                ],
               ),
             ),
           SizedBox(height: 8),
@@ -71,7 +94,10 @@ class _UploadFileState extends ConsumerState<UploadFile> {
                 final result = await ref
                     .read(filePickerServiceProvider)
                     .pickFile();
-                setState(() => selectedFile = result);
+                setState(() {
+                  selectedFile = result;
+                  isFileVisible = true;
+                });
                 widget.onPressed(result);
               } catch (e) {
                 if (context.mounted) messageTost(e.toString(), context);
@@ -97,14 +123,16 @@ class _UploadFileState extends ConsumerState<UploadFile> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/Vector.png', width: 24, height: 24),
+                      if (selectedFile == null)
+                        Image.asset('assets/Vector.png', width: 24, height: 24),
                       SizedBox(width: 8),
-                      Text(
-                        'Upload File',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Color(0xffa3a3a3),
+                      Flexible(
+                        child: Text(
+                          selectedFile != null
+                              ? '${selectedFile?.path.split('/').last}'
+                              : 'Upload File',
+                          style: TextStyle(overflow: TextOverflow.ellipsis),
+                          maxLines: 1,
                         ),
                       ),
                     ],
@@ -113,20 +141,6 @@ class _UploadFileState extends ConsumerState<UploadFile> {
               ),
             ),
           ),
-          SizedBox(height: 8),
-          if (selectedFile != null)
-            Padding(
-              padding: EdgeInsets.only(top: 4, left: 4),
-              child: Text(
-                '    ${selectedFile?.path.split('/').last}',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 12,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                maxLines: 1,
-              ),
-            ),
         ],
       ),
     );

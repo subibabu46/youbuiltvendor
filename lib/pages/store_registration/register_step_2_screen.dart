@@ -1,14 +1,13 @@
 import 'dart:developer';
 
 import 'package:design_task_1/constants/shared_pref_names.dart';
+import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
-import 'package:design_task_1/pages/error/check_internet_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/store_registration/register_step_3_screen.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_select.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_text.dart';
 import 'package:design_task_1/pages/store_registration/widgets/steps_bubbles.dart';
-import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
@@ -45,10 +44,10 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
   Widget build(BuildContext context) {
     final countriesAsync = ref.watch(countriesProvider);
 
-    final statesAsync = pinCode != null && pinCode!.isNotEmpty
+    final statesAsync = pinCode != null && pinCode!.length == 6
         ? ref.watch(statesProvider(controllers.pinCode.text))
         : null;
-    final districtsAsync = pinCode != null && pinCode!.isNotEmpty
+    final districtsAsync = pinCode != null && pinCode!.length == 6
         ? ref.watch(districtsProvider(controllers.pinCode.text))
         : null;
     return Scaffold(
@@ -97,11 +96,9 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
                       controller: controllers.pinCode,
                       label: 'Pin Code',
                       onChanged: (value) {
-                        if (value.length == 6) {
-                          setState(() {
-                            pinCode = value;
-                          });
-                        }
+                        setState(() {
+                          pinCode = value;
+                        });
                       },
                     ),
                     InputSelect(
@@ -124,84 +121,69 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 64, left: 16, right: 16),
-        child: NextButton(
-          buttonText: 'Next',
-          onPressed: () async {
-            final isValid = _formKey.currentState!.validate();
-            if (!isValid ||
-                countryId == null ||
-                stateId == null ||
-                districtId == null) {
-              messageTost('Fields shouldn\'t be empty', context);
-            } else {
-              final isConnected = await ref
-                  .read(connectivityServiceProvider)
-                  .isConnected();
-              if (!isConnected) {
-                if (context.mounted) {
-                  messageTost("No internet connection", context);
+        child: NextButton(buttonText: 'Next', onPressed: _nextCall),
+      ),
+    );
+  }
+
+  Future<void> _nextCall() async {
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid ||
+        countryId == null ||
+        stateId == null ||
+        districtId == null) {
+      messageTost('Fields shouldn\'t be empty', context);
+    } else {
+      if (!await checkConnection(context, ref)) return;
+      final registerStepId = await SharedPrefCatch.instance.getInt(
+        name: stepId,
+      );
+      log(registerStepId.toString());
+      if (registerStepId == null) return;
+      final registerStep2Info = RegisterStep2Model(
+        address1: controllers.address1.text,
+        address2: controllers.address2.text,
+        location: controllers.location.text,
+        countryId: countryId!,
+        pinCode: controllers.pinCode.text,
+        stateId: stateId!,
+        districtId: districtId!,
+      );
+      try {
+        final result = await ref.read(
+          registerStep2Provider(
+            RegisterStep2Params(
+              model: registerStep2Info,
+              stepId: registerStepId,
+            ),
+          ),
+        );
+        final pref = ref.watch(sharedPreferencesProvider).value;
+        pref?.setInt(level, result.data?['completedLevel']);
+        if (mounted) {
+          if (result.status) {
+            messageTost(result.message, context);
+            Future.delayed(const Duration(seconds: 2), () {
+              if (mounted) {
+                {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CheckInternetScreen(),
+                      builder: (context) => RegisterStep3Screen(),
                     ),
                   );
-                }
-              } else {
-                final registerStepId = await SharedPrefCatch.instance.getInt(
-                  name: stepId,
-                );
-                log(registerStepId.toString());
-                if (registerStepId == null) return;
-                final registerStep2Info = RegisterStep2Model(
-                  address1: controllers.address1.text,
-                  address2: controllers.address2.text,
-                  location: controllers.location.text,
-                  countryId: countryId!,
-                  pinCode: controllers.pinCode.text,
-                  stateId: stateId!,
-                  districtId: districtId!,
-                );
-                try {
-                  final result = await ref.read(
-                    registerStep2Provider(
-                      RegisterStep2Params(
-                        model: registerStep2Info,
-                        stepId: registerStepId,
-                      ),
-                    ),
-                  );
-                  final pref = ref.watch(sharedPreferencesProvider).value;
-                  pref?.setInt(level, result.data?['completedLevel']);
-                  if (context.mounted) {
-                    if (result.status) {
-                      messageTost(result.message, context);
-                      Future.delayed(const Duration(seconds: 2), () {
-                        if (context.mounted) {
-                          {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegisterStep3Screen(),
-                              ),
-                            );
-                          }
-                        }
-                      });
-                    } else {
-                      messageTost(result.message, context);
-                    }
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    messageTost(duration: 2, e.toString(), context);
-                  }
                 }
               }
-            }
-          },
-        ),
-      ),
-    );
+            });
+          } else {
+            messageTost(result.message, context);
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          messageTost(duration: 2, e.toString(), context);
+        }
+      }
+    }
   }
 }

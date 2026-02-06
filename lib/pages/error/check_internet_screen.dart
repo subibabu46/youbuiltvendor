@@ -22,10 +22,7 @@ class _CheckInternetScreen extends ConsumerState<CheckInternetScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                Icons.signal_wifi_statusbar_connected_no_internet_4,
-                size: 50,
-              ),
+              Icon(Icons.wifi_off_outlined, size: 50),
               SizedBox(height: 8),
               Text(
                 'Check internet connection',

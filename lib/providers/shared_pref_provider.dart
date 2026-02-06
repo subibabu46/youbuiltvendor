@@ -17,6 +17,7 @@ class SharedPrefCatch {
   }
 
   final Map<String, int> _sharedInts = {};
+  final Map<String, String> _sharedStrings = {};
   final Map<String, bool> _sharedBools = {};
   final Map<String, List<String>> _sharedStringList = {};
 
@@ -34,6 +35,25 @@ class SharedPrefCatch {
       final value = _pref?.getInt(name);
       if (value != null) {
         _sharedInts[name] = value;
+      }
+      return value;
+    }
+  }
+
+  void addString({required String? name, required String? value}) {
+    if (name != null && value != null) {
+      _sharedStrings.addAll({name: value});
+    }
+  }
+
+  Future<String?> getString({required String name}) async {
+    if (_sharedStrings.containsKey(name)) {
+      return _sharedStrings[name];
+    } else {
+      await init();
+      final value = _pref?.getString(name);
+      if (value != null) {
+        _sharedStrings[name] = value;
       }
       return value;
     }

@@ -1,8 +1,7 @@
-import 'package:design_task_1/pages/error/check_internet_screen.dart';
+import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/pages/get_started/widgets/register_button.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
 import 'package:design_task_1/pages/store_registration/send_otp_screen.dart';
-import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,26 +85,12 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
               return;
             }
             if (selectedType == Business.store) {
-              final isConnected = await ref
-                  .read(connectivityServiceProvider)
-                  .isConnected();
-              if (!isConnected) {
-                if (context.mounted) {
-                  messageTost("No internet connection", context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CheckInternetScreen(),
-                    ),
-                  );
-                }
-              } else {
-                if (context.mounted) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SendOtpScreen()),
-                  );
-                }
+              if (!await checkConnection(context, ref)) return;
+              if (context.mounted) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SendOtpScreen()),
+                );
               }
             }
           },

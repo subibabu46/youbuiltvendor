@@ -37,7 +37,8 @@ class RegisterStep2Screen extends ConsumerStatefulWidget {
 }
 
 class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
-  String? country, state, district, pinCode;
+  int? countryId, stateId, districtId;
+  String? pinCode;
   final _formKey = GlobalKey<FormState>();
   final controllers = _RegisterStep2Controllers();
   @override
@@ -89,7 +90,7 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
 
                     InputSelect(
                       label: 'Country',
-                      onSelected: (value) => country = value,
+                      onSelectedInt: (value) => countryId = value,
                       asyncList: countriesAsync,
                     ),
                     InputText(
@@ -105,12 +106,12 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
                     ),
                     InputSelect(
                       label: 'State',
-                      onSelected: (value) => state = value,
+                      onSelectedInt: (value) => stateId = value,
                       asyncList: statesAsync,
                     ),
                     InputSelect(
                       label: 'District',
-                      onSelected: (value) => district = value,
+                      onSelectedInt: (value) => districtId = value,
                       asyncList: districtsAsync,
                     ),
                     SizedBox(height: 24),
@@ -128,9 +129,9 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
           onPressed: () async {
             final isValid = _formKey.currentState!.validate();
             if (!isValid ||
-                country == null ||
-                state == null ||
-                district == null) {
+                countryId == null ||
+                stateId == null ||
+                districtId == null) {
               messageTost('Fields shouldn\'t be empty', context);
             } else {
               final isConnected = await ref
@@ -156,10 +157,10 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
                   address1: controllers.address1.text,
                   address2: controllers.address2.text,
                   location: controllers.location.text,
-                  country: country!,
+                  countryId: countryId!,
                   pinCode: controllers.pinCode.text,
-                  state: state!,
-                  district: district!,
+                  stateId: stateId!,
+                  districtId: districtId!,
                 );
                 try {
                   final result = await ref.read(

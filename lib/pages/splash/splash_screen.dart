@@ -54,6 +54,13 @@ class SplashScreen extends ConsumerWidget {
                     builder: (_) => const RegisterStep3Screen(),
                   ),
                 );
+              } else {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const RegisterStep3Screen(),
+                  ),
+                );
               }
             } else if (isUserInfo != null) {
               Navigator.pushReplacement(

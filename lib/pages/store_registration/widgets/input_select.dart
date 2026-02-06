@@ -8,14 +8,16 @@ class InputSelect extends StatefulWidget {
     this.hintText,
     required this.label,
     this.isRequired = true,
-    required this.onSelected,
+    this.onSelectedString,
     required this.asyncList,
+    this.onSelectedInt,
   });
 
   final String? hintText;
   final String label;
   final bool isRequired;
-  final void Function(String)? onSelected;
+  final void Function(String)? onSelectedString;
+  final void Function(int)? onSelectedInt;
   final AsyncValue<List<GetModel>>? asyncList;
 
   @override
@@ -24,7 +26,7 @@ class InputSelect extends StatefulWidget {
 
 class _InputSelectState extends State<InputSelect> {
   bool _hasError = false;
-  String? selectedValue;
+  GetModel? selectedValue;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -58,7 +60,7 @@ class _InputSelectState extends State<InputSelect> {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: widget.asyncList != null
                   ? widget.asyncList?.when(
-                      data: (data) => DropdownButton<String>(
+                      data: (data) => DropdownButton<GetModel>(
                         hint: Text(
                           widget.hintText ?? 'Select details',
                           style: TextStyle(
@@ -78,13 +80,15 @@ class _InputSelectState extends State<InputSelect> {
                         value: selectedValue,
                         items: data.map((e) {
                           return DropdownMenuItem(
-                            value: e.label,
+                            value: e,
                             child: Text(e.label),
                           );
                         }).toList(),
 
                         onChanged: (value) {
-                          if (value == null || value.isEmpty) {
+                          if (value == null ||
+                              value.label.isEmpty ||
+                              value.value.isNaN) {
                             setState(() => _hasError = true);
                             return;
                           }
@@ -94,8 +98,10 @@ class _InputSelectState extends State<InputSelect> {
                             selectedValue = value;
                           });
 
-                          if (widget.onSelected != null) {
-                            widget.onSelected!(value);
+                          if (widget.onSelectedInt != null) {
+                            widget.onSelectedInt!(value.value);
+                          } else if (widget.onSelectedString != null) {
+                            widget.onSelectedString!(value.label);
                           }
                         },
                       ),

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:design_task_1/models/get_model.dart';
 import 'package:design_task_1/models/otp_model.dart';
@@ -196,16 +195,13 @@ class StoreRepository {
     try {
       final data = registerStep3Info.toJson();
       final response = await storeService.registerStep3(data, stepId);
-      log('registerStep3: ${response.body}');
-      // log('registerStep3: ${response.data}');
+      log('registerStep3: ${response.data}');
 
       if (response.statusCode == 200) {
-        return ResponseModel.fromJson(jsonDecode(response.body));
-        // return ResponseModel.fromJson(response.data);
+        return ResponseModel.fromJson(response.data);
       }
 
-      return ResponseModel.fromJson(jsonDecode(response.body));
-      // return ResponseModel.fromJson(response.data);
+      return ResponseModel.fromJson(response.data);
     } catch (e) {
       log('registerStep3: $e');
       rethrow;

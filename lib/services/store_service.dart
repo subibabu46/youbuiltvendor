@@ -1,14 +1,10 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
-import 'package:path/path.dart' as path;
-import 'package:http/http.dart' as http;
 
 class StoreService {
   late final Dio dio = Dio(
@@ -99,6 +95,7 @@ class StoreService {
 
   Future<Response> sendOtp(Map<String, dynamic> data) async {
     try {
+      log(data.toString());
       final response = await dio.post("/api/users/sendOtp", data: data);
 
       return response;
@@ -129,6 +126,7 @@ class StoreService {
 
   Future<Response> registerStep1(Map<String, dynamic> data) async {
     try {
+      log('step1:$data');
       final response = await dio.post(
         "/api/users/registrationStep1",
         data: data,
@@ -147,6 +145,7 @@ class StoreService {
 
   Future<Response> registerStep2(Map<String, dynamic> data, int stepId) async {
     try {
+      log("step2 : $data");
       final response = await dio.patch(
         "/api/users/registrationStep2/$stepId",
         data: data,
@@ -163,195 +162,68 @@ class StoreService {
     }
   }
 
-  // Future<Object> registerStep3(Map<String, dynamic> data, int stepId) async {
-  //   try {
-  //     final uri = Uri.parse(
-  //       'https://youbuilt-jrqd6.ondigitalocean.app//api/users/registrationStep3/$stepId',
-  //     );
-  //     final request = http.MultipartRequest('PATCH', uri);
-  //    // request.headers['Authorization'] = "Bearer ${accessToken ?? ""}";
-
-  //     for (var entry in data.entries) {
-  //       final File? file = entry.value;
-
-  //       if (file != null && await file.exists()) {
-  //         final fileName = path.basename(file.path);
-  //         final ext = fileName.split('.').last.toLowerCase();
-  //         MediaType mediaType;
-  //         if (ext == 'png') {
-  //           mediaType = MediaType('image', 'png');
-  //         } else if (ext == 'jpg' || ext == 'jpeg') {
-  //           mediaType = MediaType('image', 'jpeg');
-  //         } else if (ext == 'pdf') {
-  //           mediaType = MediaType('application', 'pdf');
-  //         } else {
-  //           mediaType = MediaType('application', 'octet-stream');
-  //         }
-  //         request.files.add(
-  //           await http.MultipartFile.fromPath(
-  //             'file', //
-  //             file.path,
-  //             filename: fileName,
-  //             contentType: mediaType,
-  //           ),
-  //         );
-  //       }
-  //       final streamedResponse = await request.send();
-  //       final response = await http.Response.fromStream(streamedResponse);
-  //       return response;
-  //     }
-
-  //     final formData = FormData();
-
-  //     for (var entry in data.entries) {
-  //       final value = entry.value;
-
-  //       if (value == null) continue;
-
-  //       if (value is File) {
-  //         formData.files.add(
-  //           MapEntry(
-  //             entry.key,
-  //             await MultipartFile.fromFile(
-  //               value.path,
-  //               filename: path.basename(value.path),
-  //             ),
-  //           ),
-  //         );
-  //       } else {
-  //         formData.fields.add(MapEntry(entry.key, value.toString()));
-  //       }
-  //     }
-
-  //     final response = await dio.patch(
-  //       "/api/users/registrationStep3/$stepId",
-  //       data: formData,
-  //       options: Options(contentType: 'multipart/form-data'),
-  //     );
-
-  //     return response;
-  //   } on DioException catch (e) {
-  //     final message =
-  //         e.response?.data['message'] ?? e.message ?? 'Something went wrong';
-
-  //     throw message;
-  //   } catch (e) {
-  //     throw 'Unexpected error occurred';
-  //   }
-  //   }  Future<Response> registerStep3(Map<String, dynamic> data, int stepId) async {
-  //     try {
-  //       final formData = FormData();
-
-  //       for (var entry in data.entries) {
-  //         final value = entry.value;
-
-  //         if (value == null) continue;
-
-  //         if (value is File) {
-  //           formData.files.add(
-  //             MapEntry(
-  //               entry.key,
-  //               await MultipartFile.fromFile(
-  //                 value.path,
-  //                 filename: path.basename(value.path),
-  //               ),
-  //             ),
-  //           );
-  //         } else {
-  //           formData.fields.add(MapEntry(entry.key, value.toString()));
-  //         }
-  //       }
-
-  //       final response = await dio.patch(
-  //         "/api/users/registrationStep3/$stepId",
-  //         data: formData,
-  //         options: Options(contentType: 'multipart/form-data'),
-  //       );
-
-  //       return response;
-  //     } on DioException catch (e) {
-  //       final message =
-  //           e.response?.data['message'] ?? e.message ?? 'Something went wrong';
-
-  //       throw message;
-  //     } catch (e) {
-  //       throw 'Unexpected error occurred';
-  //     }
-  // }
-  Future<http.Response> registerStep3(
-    Map<String, dynamic> data,
-    int stepId,
-  ) async {
-    log(data.values.toString());
-    final files = {
-      'businessLogo': data['businessLogo'],
-      'companyPan': data['companyPan'],
-      'ownerPan': data['ownerPan'],
-      'ownerId': data['ownerId'],
-      'gstCertificate': data['gstCertificate'],
-    };
+  Future<Response> registerStep3(Map<String, dynamic> data, int stepId) async {
     try {
-      final uri = Uri.parse(
-        "https://youbuilt-jrqd6.ondigitalocean.app/api/users/registrationStep3/$stepId",
-      );
+      final formData = FormData();
 
-      final request = http.MultipartRequest('PATCH', uri);
+      print('=== Starting registerStep3 ===');
+      print('Step ID: $stepId');
 
-      request.headers.addAll({
-        'Accept': 'application/json',
-        // 'Authorization': 'Bearer ${accessToken ?? ""}',
-      });
-      for (var entry in files.entries) {
+      for (var entry in data.entries) {
         final value = entry.value;
+        if (value == null) continue;
 
-        if (value is File && await value.exists()) {
-          final fileName = path.basename(value.path);
-          final ext = fileName.split('.').last.toLowerCase();
+        if (value is File) {
+          final mimeType =
+              lookupMimeType(value.path) ?? 'application/octet-stream';
+          final parts = mimeType.split('/');
 
-          MediaType mediaType;
-          if (ext == 'png') {
-            mediaType = MediaType('image', 'png');
-          } else if (ext == 'jpg' || ext == 'jpeg') {
-            mediaType = MediaType('image', 'jpeg');
-          } else if (ext == 'pdf') {
-            mediaType = MediaType('application', 'pdf');
-          } else {
-            mediaType = MediaType('application', 'octet-stream');
-          }
-
-          request.files.add(
-            await http.MultipartFile.fromPath(
+          formData.files.add(
+            MapEntry(
               entry.key,
-              value.path,
-              filename: fileName,
-              contentType: mediaType,
+              await MultipartFile.fromFile(
+                value.path,
+                filename: value.path.split('/').last,
+                contentType: MediaType(parts[0], parts[1]),
+              ),
             ),
           );
         } else {
-          request.fields['businessLogo'] = value.toString();
+          formData.fields.add(MapEntry(entry.key, value.toString()));
         }
       }
-      debugPrint("URL: $uri");
-      debugPrint("HEADERS: ${request.headers}");
-      request.fields.forEach((k, v) => debugPrint("FIELD $k: $v"));
-      for (final f in request.files) {
-        debugPrint(
-          "FILE field=${f.field}, filename=${f.filename}, type=${f.contentType}",
-        );
+
+      final response = await dio.patch(
+        "/api/users/registrationStep3/$stepId",
+        data: formData,
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
+      );
+
+      return response;
+    } on DioException catch (e) {
+      print('DioException details:');
+      print('Status code: ${e.response?.statusCode}');
+      print('Response data: ${e.response?.data}');
+      print('Error type: ${e.type}');
+
+      // Extract more specific error message
+      if (e.response?.statusCode == 500) {
+        final errorData = e.response?.data;
+        if (errorData is Map && errorData.containsKey('error')) {
+          final error = errorData['error'];
+          if (error is Map && error.containsKey('name')) {
+            throw 'Server validation error: ${error['name']}. Please contact support.';
+          }
+        }
+        throw 'Server error occurred. Please try again later.';
       }
 
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return response;
-      } else {
-        final decoded = jsonDecode(response.body);
-        throw decoded
-            .toString(); //decoded['message'] ?? 'Something went wrong';
-      }
+      final message =
+          e.response?.data['message'] ?? e.message ?? 'Something went wrong';
+      throw message;
     } catch (e) {
-      throw e.toString();
+      print('Unexpected error: $e');
+      throw 'Unexpected error occurred';
     }
   }
 }

@@ -74,41 +74,40 @@ class _InputNumberState extends ConsumerState<InputNumber> {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 children: [
-                  ShimmerEffect(width: 50, height: 50),
+                  countryCodesAsync.when(
+                    data: (codes) {
+                      return DropdownButton<String>(
+                        underline: SizedBox(),
+                        value: widget.isEnabled ? selectedValue : widget.code,
+                        items: codes.map((code) {
+                          return DropdownMenuItem(
+                            value: code.label,
+                            child: Text(code.label),
+                          );
+                        }).toList(),
+                        onChanged: widget.isEnabled
+                            ? (value) {
+                                setState(() {
+                                  selectedValue = value;
+                                });
+                                if (value != null &&
+                                    widget.onCountryCodeChanged != null) {
+                                  widget.onCountryCodeChanged!(value);
+                                }
+                              }
+                            : null,
+                      );
+                    },
+                    loading: () =>
+                        ShimmerEffect(width: 50, height: 50, radius: 6),
+                    error: (error, stack) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        messageTost('Something went wrong', context);
+                      });
 
-                  // countryCodesAsync.when(
-                  //   data: (codes) {
-                  //     return DropdownButton<String>(
-                  //       underline: SizedBox(),
-                  //       value: widget.isEnabled ? selectedValue : widget.code,
-                  //       items: codes.map((code) {
-                  //         return DropdownMenuItem(
-                  //           value: code.label,
-                  //           child: Text(code.label),
-                  //         );
-                  //       }).toList(),
-                  //       onChanged: widget.isEnabled
-                  //           ? (value) {
-                  //               setState(() {
-                  //                 selectedValue = value;
-                  //               });
-                  //               if (value != null &&
-                  //                   widget.onCountryCodeChanged != null) {
-                  //                 widget.onCountryCodeChanged!(value);
-                  //               }
-                  //             }
-                  //           : null,
-                  //     );
-                  //   },
-                  //   loading: () => ShimmerEffect(width: 50, height: 50),
-                  //   error: (error, stack) {
-                  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-                  //       messageTost('Something went wrong', context);
-                  //     });
-
-                  //     return Center(child: Text('+ '));
-                  //   },
-                  // ),
+                      return Center(child: Text('+ '));
+                    },
+                  ),
                   SizedBox(width: 8),
                   Container(width: 1, height: 24, color: Color(0xffe0e0e0)),
                   SizedBox(width: 8),

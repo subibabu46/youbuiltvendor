@@ -131,7 +131,7 @@ class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
                     ),
                     InputSelect(
                       label: 'Business Type',
-                      onSelected: (value) => businessType = value,
+                      onSelectedString: (value) => businessType = value,
                       asyncList: businessTypesAsync,
                     ),
                   ],

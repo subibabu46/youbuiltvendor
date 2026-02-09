@@ -113,7 +113,7 @@ class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
                           InputNumber(
                             controller: controllers.companyOfficialNumber,
                             label: 'Company Official Number',
-                            isRequired: false,
+                            isFieldRequired: false,
                             onCountryCodeChanged: (value) =>
                                 officialNumberCode = value,
                           ),

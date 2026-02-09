@@ -1,21 +1,19 @@
 import 'package:design_task_1/pages/error/check_internet_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/store_registration/send_otp_screen.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_number.dart';
 import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class ForgotPassword extends ConsumerStatefulWidget {
+  const ForgotPassword({super.key});
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   TextEditingController numberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -49,7 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Welcome \nBack!',
+                              'Forgot \nPassword',
                               style: TextStyle(
                                 color: Color(0xff2c2c2c),
                                 fontWeight: FontWeight.w700,
@@ -58,7 +56,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              'Login to your Youbuilt account',
+                              'Enter your registered phone number',
                               style: TextStyle(
                                 color: Color(0xff737373),
                                 fontWeight: FontWeight.w500,
@@ -84,40 +82,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text.rich(
-                          TextSpan(
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: 'Didn’t registered yet? ',
-                                style: TextStyle(color: Color(0xffa3a3a3)),
-                              ),
-                              TextSpan(
-                                text: 'Register Now',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.red,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SendOtpScreen(),
-                                      ),
-                                    );
-                                  },
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 10),
                         NextButton(
-                          buttonText: 'Submit',
+                          buttonText: 'Verify',
                           onPressed: () async {
                             final isValid = _formKey.currentState!.validate();
 

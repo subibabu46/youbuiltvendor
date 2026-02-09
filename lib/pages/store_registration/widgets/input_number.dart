@@ -9,7 +9,7 @@ class InputNumber extends ConsumerStatefulWidget {
   final TextEditingController controller;
   final String? hintText;
   final String label;
-  final bool isRequired;
+  final bool isFieldRequired;
   final bool isEnabled;
   final String code;
   final void Function(String)? onCountryCodeChanged;
@@ -19,7 +19,7 @@ class InputNumber extends ConsumerStatefulWidget {
     required this.controller,
     this.hintText,
     required this.label,
-    this.isRequired = true,
+    this.isFieldRequired = true,
     this.onCountryCodeChanged,
     this.isEnabled = true,
     this.code = '+91',
@@ -38,7 +38,7 @@ class _InputNumberState extends ConsumerState<InputNumber> {
     final label = widget.label;
     final controller = widget.controller;
     final hintText = widget.hintText;
-    final isRequired = widget.isRequired;
+    final isFieldRequired = widget.isFieldRequired;
 
     final countryCodesAsync = ref.watch(countryCodesProvider);
 
@@ -52,7 +52,7 @@ class _InputNumberState extends ConsumerState<InputNumber> {
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
               children: [
                 TextSpan(text: label),
-                isRequired
+                isFieldRequired
                     ? TextSpan(
                         text: '*',
                         style: TextStyle(color: Colors.red),

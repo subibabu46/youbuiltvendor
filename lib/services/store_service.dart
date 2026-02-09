@@ -95,17 +95,18 @@ class StoreService {
 
   Future<Response> sendOtp(Map<String, dynamic> data) async {
     try {
-      log(data.toString());
+      log("SEND OTP DATA: $data");
+
       final response = await dio.post("/api/users/sendOtp", data: data);
 
       return response;
     } on DioException catch (e) {
-      final message =
-          e.response?.data['message'] ?? e.message ?? 'Something went wrong';
+      final status = e.response?.statusCode;
+      final message = e.response?.data?['message'] ?? e.message;
 
-      throw message;
-    } catch (e) {
-      throw 'Unexpected error occurred';
+      log("SEND OTP ERROR [$status]: $message");
+
+      throw message ?? "Failed to send OTP";
     }
   }
 

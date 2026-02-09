@@ -9,6 +9,7 @@ class InputText extends StatelessWidget {
     this.isFieldRequired = true,
     this.isEnabled = true,
     this.onChanged,
+    this.keyboardType = TextInputType.name,
   });
 
   final TextEditingController controller;
@@ -17,6 +18,7 @@ class InputText extends StatelessWidget {
   final bool isFieldRequired;
   final bool isEnabled;
   final Function(String)? onChanged;
+  final TextInputType keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class InputText extends StatelessWidget {
 
           SizedBox(height: 8),
           TextFormField(
+            keyboardType: keyboardType,
             enabled: isEnabled,
             controller: controller,
             onChanged: onChanged,

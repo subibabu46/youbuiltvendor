@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:design_task_1/constants/shared_pref_names.dart';
@@ -35,56 +34,72 @@ class _RegisterStep3ScreenState extends ConsumerState<RegisterStep3Screen> {
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 50),
-                  Text(
-                    'Registration',
-                    style: TextStyle(
-                      color: Color(0xff2c2c2c),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 32,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 50),
+                        Text(
+                          'Registration',
+                          style: TextStyle(
+                            color: Color(0xff2c2c2c),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 32,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        StepsBubbles(isEnable2: true),
+                        SizedBox(height: 40),
+                        UploadFile(
+                          label: 'Business Logo',
+                          showFile: true,
+                          onPressed: (value) => businessLogo = value,
+                        ),
+                        UploadFile(
+                          label: 'Company PAN Card',
+                          onPressed: (value) => companyPanCard = value,
+                        ),
+                        UploadFile(
+                          label: 'Owner PAN Card',
+                          onPressed: (value) => ownerPanCard = value,
+                        ),
+
+                        UploadFile(
+                          label: 'Owner ID Card',
+                          onPressed: (value) => ownerIdCard = value,
+                        ),
+                        UploadFile(
+                          label: 'GST Certificate',
+                          onPressed: (value) => gstCertificate = value,
+                        ),
+
+                        SizedBox(height: 24),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 8),
-                  StepsBubbles(isEnable2: true),
-                  SizedBox(height: 40),
-                  UploadFile(
-                    label: 'Business Logo',
-                    showFile: true,
-                    onPressed: (value) => businessLogo = value,
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 64,
+                      left: 16,
+                      right: 16,
+                    ),
+                    child: NextButton(
+                      buttonText: 'Confirm',
+                      onPressed: _confirmCall,
+                    ),
                   ),
-                  UploadFile(
-                    label: 'Company PAN Card',
-                    onPressed: (value) => companyPanCard = value,
-                  ),
-                  UploadFile(
-                    label: 'Owner PAN Card',
-                    onPressed: (value) => ownerPanCard = value,
-                  ),
-
-                  UploadFile(
-                    label: 'Owner ID Card',
-                    onPressed: (value) => ownerIdCard = value,
-                  ),
-                  UploadFile(
-                    label: 'GST Certificate',
-                    onPressed: (value) => gstCertificate = value,
-                  ),
-
-                  SizedBox(height: 24),
                 ],
               ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 64, left: 16, right: 16),
-        child: NextButton(buttonText: 'Confirm', onPressed: _confirmCall),
       ),
     );
   }
@@ -102,7 +117,6 @@ class _RegisterStep3ScreenState extends ConsumerState<RegisterStep3Screen> {
       final registerStepId = await SharedPrefCatch.instance.getInt(
         name: stepId,
       );
-      log(registerStepId.toString());
       if (registerStepId == null) return;
       final registerStep3Info = RegisterStep3Model(
         businessLogo: businessLogo!,

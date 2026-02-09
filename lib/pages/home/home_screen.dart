@@ -19,11 +19,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 8),
-              Text(
-                'Home',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
+              Center(
+                child: Text(
+                  'Home',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
                 ),
               ),
               SizedBox(height: 32),

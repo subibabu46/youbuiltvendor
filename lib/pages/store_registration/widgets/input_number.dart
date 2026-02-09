@@ -1,3 +1,4 @@
+import 'package:design_task_1/models/response_model.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:design_task_1/utils/shimmer_effect.dart';
@@ -73,7 +74,8 @@ class _InputNumberState extends ConsumerState<InputNumber> {
             child: Row(
               children: [
                 countryCodesAsync.when(
-                  data: (codes) {
+                  data: (result) {
+                    final codes = result.data as List<GetModel>;
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: DropdownButton<String>(

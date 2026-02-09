@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
@@ -41,6 +39,7 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
   final _formKey = GlobalKey<FormState>();
   final controllers = _RegisterStep2Controllers();
   @override
+  @override
   Widget build(BuildContext context) {
     final countriesAsync = ref.watch(countriesProvider);
 
@@ -55,73 +54,87 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 50),
-                    Text(
-                      'Registration',
-                      style: TextStyle(
-                        color: Color(0xff2c2c2c),
-                        fontWeight: FontWeight.w700,
-                        fontSize: 32,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 50),
+                          Text(
+                            'Registration',
+                            style: TextStyle(
+                              color: Color(0xff2c2c2c),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 32,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          StepsBubbles(isEnable2: true),
+                          SizedBox(height: 40),
+                          InputText(
+                            controller: controllers.address1,
+                            label: 'Address 1',
+                          ),
+                          InputText(
+                            controller: controllers.address2,
+                            label: 'Address 2',
+                          ),
+                          InputText(
+                            controller: controllers.location,
+                            label: 'Location',
+                          ),
+
+                          InputSelect(
+                            label: 'Country',
+                            onSelectedInt: (value) => countryId = value,
+                            asyncList: countriesAsync,
+                          ),
+                          InputText(
+                            keyboardType: TextInputType.number,
+                            controller: controllers.pinCode,
+                            label: 'Pin Code',
+                            onChanged: (value) {
+                              setState(() {
+                                pinCode = value;
+                              });
+                            },
+                          ),
+                          InputSelect(
+                            label: 'State',
+                            onSelectedInt: (value) => stateId = value,
+                            asyncList: statesAsync,
+                          ),
+                          InputSelect(
+                            label: 'District',
+                            onSelectedInt: (value) => districtId = value,
+                            asyncList: districtsAsync,
+                          ),
+                          SizedBox(height: 24),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 8),
-                    StepsBubbles(isEnable2: true),
-                    SizedBox(height: 40),
-                    InputText(
-                      controller: controllers.address1,
-                      label: 'Address 1',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 64,
+                      left: 16,
+                      right: 16,
                     ),
-                    InputText(
-                      controller: controllers.address2,
-                      label: 'Address 2',
-                    ),
-                    InputText(
-                      controller: controllers.location,
-                      label: 'Location',
-                    ),
-
-                    InputSelect(
-                      label: 'Country',
-                      onSelectedInt: (value) => countryId = value,
-                      asyncList: countriesAsync,
-                    ),
-                    InputText(
-                      controller: controllers.pinCode,
-                      label: 'Pin Code',
-                      onChanged: (value) {
-                        setState(() {
-                          pinCode = value;
-                        });
-                      },
-                    ),
-                    InputSelect(
-                      label: 'State',
-                      onSelectedInt: (value) => stateId = value,
-                      asyncList: statesAsync,
-                    ),
-                    InputSelect(
-                      label: 'District',
-                      onSelectedInt: (value) => districtId = value,
-                      asyncList: districtsAsync,
-                    ),
-                    SizedBox(height: 24),
-                  ],
-                ),
+                    child: NextButton(buttonText: 'Next', onPressed: _nextCall),
+                  ),
+                ],
               ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 64, left: 16, right: 16),
-        child: NextButton(buttonText: 'Next', onPressed: _nextCall),
       ),
     );
   }
@@ -138,7 +151,6 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
       final registerStepId = await SharedPrefCatch.instance.getInt(
         name: stepId,
       );
-      log(registerStepId.toString());
       if (registerStepId == null) return;
       final registerStep2Info = RegisterStep2Model(
         address1: controllers.address1.text,

@@ -1,4 +1,3 @@
-import 'package:design_task_1/models/get_model.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/register_step_1_model.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
@@ -23,25 +22,25 @@ final storeRepositoryProvider = Provider<StoreRepository>((ref) {
 //-------------------------------------------------------------------
 
 //Country Code
-final countryCodesProvider = FutureProvider<List<GetModel>>((ref) async {
+final countryCodesProvider = FutureProvider<ResponseModel>((ref) async {
   final repository = ref.watch(storeRepositoryProvider);
   return repository.fetchCountryCodes();
 });
 
 //Business Type
-final businessTypesProvider = FutureProvider<List<GetModel>>((ref) async {
+final businessTypesProvider = FutureProvider<ResponseModel>((ref) async {
   final repository = ref.watch(storeRepositoryProvider);
   return repository.fetchBusinessTypes();
 });
 
 //Country
-final countriesProvider = FutureProvider<List<GetModel>>((ref) async {
+final countriesProvider = FutureProvider<ResponseModel>((ref) async {
   final repository = ref.watch(storeRepositoryProvider);
   return repository.fetchCountries();
 });
 
 //State
-final statesProvider = FutureProvider.family<List<GetModel>, String>((
+final statesProvider = FutureProvider.family<ResponseModel, String>((
   ref,
   value,
 ) async {
@@ -50,7 +49,7 @@ final statesProvider = FutureProvider.family<List<GetModel>, String>((
 });
 
 //District
-final districtsProvider = FutureProvider.family<List<GetModel>, String>((
+final districtsProvider = FutureProvider.family<ResponseModel, String>((
   ref,
   value,
 ) async {

@@ -3,6 +3,7 @@ import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/register_step_1_model.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
+import 'package:design_task_1/pages/store_registration/provider/register_type_provider.dart';
 import 'package:design_task_1/pages/store_registration/register_step_2_screen.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_number.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_select.dart';
@@ -50,106 +51,124 @@ class RegisterStep1Screen extends ConsumerStatefulWidget {
 
 class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
   final _formKey = GlobalKey<FormState>();
+  final controllers = _RegisterStep1Controllers();
   String? officialNumberCode, code, businessType;
 
   @override
   Widget build(BuildContext context) {
-    final controllers = _RegisterStep1Controllers();
     controllers.ownerName.text = widget.userInfo.name;
     controllers.phoneNumber.text = widget.userInfo.phoneNumber;
     final countryCode = widget.userInfo.code;
     final businessTypesAsync = ref.watch(businessTypesProvider);
+
     return Scaffold(
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Registration',
-                      style: TextStyle(
-                        color: Color(0xff2c2c2c),
-                        fontWeight: FontWeight.w700,
-                        fontSize: 32,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 24,
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Registration',
+                            style: TextStyle(
+                              color: Color(0xff2c2c2c),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 32,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          StepsBubbles(isEnable2: false),
+                          SizedBox(height: 40),
+                          InputText(
+                            controller: controllers.businessName,
+                            label: 'Business Name',
+                          ),
+                          InputText(
+                            isEnabled: false,
+                            controller: controllers.ownerName,
+                            label: 'Owner Name',
+                          ),
+                          InputText(
+                            controller: controllers.businessEmail,
+                            label: 'Business Email',
+                          ),
+                          InputText(
+                            controller: controllers.ownerEmail,
+                            label: 'Owner Email',
+                          ),
+                          InputNumber(
+                            controller: controllers.companyOfficialNumber,
+                            label: 'Company Official Number',
+                            isRequired: false,
+                            onCountryCodeChanged: (value) =>
+                                officialNumberCode = value,
+                          ),
+                          InputNumber(
+                            isEnabled: false,
+                            code: countryCode,
+                            controller: controllers.phoneNumber,
+                            label: 'Phone Number',
+                          ),
+                          InputText(
+                            controller: controllers.companyPanNumber,
+                            label: 'Company PAN Number',
+                          ),
+                          InputText(
+                            controller: controllers.ownerPanNumber,
+                            label: 'Owner PAN Number',
+                          ),
+                          InputText(
+                            controller: controllers.gstNumber,
+                            label: 'GST Number',
+                          ),
+                          InputText(
+                            controller: controllers.ownerIdNumber,
+                            label: 'Owner ID Number',
+                          ),
+                          InputSelect(
+                            label: 'Business Type',
+                            onSelectedString: (value) => businessType = value,
+                            asyncList: businessTypesAsync,
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 8),
-                    StepsBubbles(isEnable2: false),
-                    SizedBox(height: 40),
-                    InputText(
-                      controller: controllers.businessName,
-                      label: 'Business Name',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 64,
+                      left: 16,
+                      right: 16,
                     ),
-                    InputText(
-                      isEnabled: false,
-                      controller: controllers.ownerName,
-                      label: 'Owner Name',
-                    ),
-                    InputText(
-                      controller: controllers.businessEmail,
-                      label: 'Business Email',
-                    ),
-                    InputText(
-                      controller: controllers.ownerEmail,
-                      label: 'Owner Email',
-                    ),
-                    InputNumber(
-                      controller: controllers.companyOfficialNumber,
-                      label: 'Company Official Number',
-                      isRequired: false,
-                      onCountryCodeChanged: (value) =>
-                          officialNumberCode = value,
-                    ),
-                    InputNumber(
-                      isEnabled: false,
-                      code: countryCode,
-                      controller: controllers.phoneNumber,
-                      label: 'Phone Number',
-                    ),
-                    InputText(
-                      controller: controllers.companyPanNumber,
-                      label: 'Company PAN Number',
-                    ),
-                    InputText(
-                      controller: controllers.ownerPanNumber,
-                      label: 'Owner PAN Number',
-                    ),
-                    InputText(
-                      controller: controllers.gstNumber,
-                      label: 'GST Number',
-                    ),
-                    InputText(
-                      controller: controllers.ownerIdNumber,
-                      label: 'Owner ID Number',
-                    ),
-                    InputSelect(
-                      label: 'Business Type',
-                      onSelectedString: (value) => businessType = value,
-                      asyncList: businessTypesAsync,
-                    ),
-                  ],
-                ),
+                    child: NextButton(buttonText: 'Next', onPressed: _nextCall),
+                  ),
+                ],
               ),
             ),
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 64, left: 16, right: 16),
-        child: NextButton(buttonText: 'Next', onPressed: _nextCall),
-      ),
     );
   }
 
   Future<void> _nextCall() async {
-    final controllers = _RegisterStep1Controllers();
     final isValid = _formKey.currentState!.validate();
+
+    final type = ref.read(registerTypeProvider).value;
     if (!isValid || businessType == null) {
       messageTost('Fields shouldn\'t be empty', context);
     } else {
@@ -166,7 +185,7 @@ class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
         ownerPanNumber: controllers.ownerPanNumber.text,
         gstNumber: controllers.gstNumber.text,
         ownerIdNumber: controllers.ownerIdNumber.text,
-        type: 'store',
+        type: type,
         companyOfficialNumberCode: officialNumberCode ?? '+91',
         businessType: businessType!,
       );

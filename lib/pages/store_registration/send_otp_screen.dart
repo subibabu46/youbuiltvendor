@@ -2,6 +2,7 @@ import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/pages/login/login_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
+import 'package:design_task_1/pages/store_registration/provider/register_type_provider.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_number.dart';
 import 'package:design_task_1/pages/store_registration/widgets/input_text.dart';
 import 'package:design_task_1/pages/store_registration/verify_otp_screen.dart';
@@ -34,71 +35,76 @@ class _SendOtpScreenState extends ConsumerState<SendOtpScreen> {
   @override
   Widget build(BuildContext context) {
     String selectedCountryCode = '+91';
-
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: MediaQuery.of(context).size.height,
-                ),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    children: [
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Let’s \nGet Started',
-                              style: TextStyle(
-                                color: Color(0xff2c2c2c),
-                                fontWeight: FontWeight.w700,
-                                fontSize: 32,
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 24,
+                        ),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Let’s \nGet Started',
+                                style: TextStyle(
+                                  color: Color(0xff2c2c2c),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 32,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Tell Us About Yourself',
-                              style: TextStyle(
-                                color: Color(0xff737373),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
+                              SizedBox(height: 8),
+                              Text(
+                                'Tell Us About Yourself',
+                                style: TextStyle(
+                                  color: Color(0xff737373),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 8),
-                            InputText(
-                              controller: nameController,
-                              label: 'Full Name',
-                              hintText: 'Enter full name',
-                            ),
-                            InputNumber(
-                              controller: numberController,
-                              label: 'Phone Number',
-                              hintText: 'Enter number',
-                              onCountryCodeChanged: (code) {
-                                selectedCountryCode = code;
-                              },
-                            ),
-                          ],
+                              SizedBox(height: 8),
+                              InputText(
+                                controller: nameController,
+                                label: 'Full Name',
+                                hintText: 'Enter full name',
+                              ),
+                              InputNumber(
+                                controller: numberController,
+                                label: 'Phone Number',
+                                hintText: 'Enter number',
+                                onCountryCodeChanged: (code) {
+                                  selectedCountryCode = code;
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      Spacer(),
-                      // _BottomWidget(
-                      //   formKey: _formKey,
-                      //   nameController: nameController,
-                      //   numberController: numberController,
-                      //   selectedCountryCode: selectedCountryCode,
-                      // ),
-                    ],
-                  ),
+                    ),
+
+                    _BottomWidget(
+                      formKey: _formKey,
+                      nameController: nameController,
+                      numberController: numberController,
+                      selectedCountryCode: selectedCountryCode,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -125,8 +131,9 @@ class _BottomWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final timerState = ref.watch(otpTimerProvider);
     final timerNotifier = ref.read(otpTimerProvider.notifier);
+    final type = ref.read(registerTypeProvider).value;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 64, left: 16, right: 16),
+      padding: const EdgeInsets.only(left: 16, right: 16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -185,7 +192,7 @@ class _BottomWidget extends ConsumerWidget {
                   phoneNumber: numberController.text,
                   name: nameController.text,
                   code: selectedCountryCode,
-                  type: "store",
+                  type: type,
                 );
                 try {
                   final result = await ref.read(sendOtpProvider(userInfo));
@@ -219,6 +226,7 @@ class _BottomWidget extends ConsumerWidget {
               }
             },
           ),
+          SizedBox(height: 88),
         ],
       ),
     );

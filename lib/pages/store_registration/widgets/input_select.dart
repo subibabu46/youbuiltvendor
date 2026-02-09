@@ -1,4 +1,4 @@
-import 'package:design_task_1/models/get_model.dart';
+import 'package:design_task_1/models/response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,7 +18,7 @@ class InputSelect extends StatefulWidget {
   final bool isRequired;
   final void Function(String)? onSelectedString;
   final void Function(int)? onSelectedInt;
-  final AsyncValue<List<GetModel>>? asyncList;
+  final AsyncValue<ResponseModel>? asyncList;
 
   @override
   State<InputSelect> createState() => _InputSelectState();
@@ -72,53 +72,56 @@ class _InputSelectState extends State<InputSelect> {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: widget.asyncList != null
                   ? widget.asyncList?.when(
-                      data: (data) => DropdownButton<GetModel>(
-                        hint: Text(
-                          widget.hintText ?? 'Select details',
+                      data: (result) {
+                        final data = result.data as List<GetModel>;
+                        return DropdownButton<GetModel>(
+                          hint: Text(
+                            widget.hintText ?? 'Select details',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Color(0xffa3a3a3),
+                            ),
+                          ),
+                          icon: Icon(Icons.keyboard_arrow_down),
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
                             color: Color(0xffa3a3a3),
                           ),
-                        ),
-                        icon: Icon(Icons.keyboard_arrow_down),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Color(0xffa3a3a3),
-                        ),
-                        isExpanded: true,
-                        underline: SizedBox(),
-                        value: selectedValue,
-                        items: data.isNotEmpty
-                            ? data.map((e) {
-                                return DropdownMenuItem(
-                                  value: e,
-                                  child: Text(e.label),
-                                );
-                              }).toList()
-                            : [],
+                          isExpanded: true,
+                          underline: SizedBox(),
+                          value: selectedValue,
+                          items: data.isNotEmpty
+                              ? data.map((e) {
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e.label),
+                                  );
+                                }).toList()
+                              : [],
 
-                        onChanged: (value) {
-                          if (value == null ||
-                              value.label.isEmpty ||
-                              value.value.isNaN) {
-                            setState(() => _hasError = true);
-                            return;
-                          }
+                          onChanged: (value) {
+                            if (value == null ||
+                                value.label.isEmpty ||
+                                value.value.isNaN) {
+                              setState(() => _hasError = true);
+                              return;
+                            }
 
-                          setState(() {
-                            _hasError = false;
-                            selectedValue = value;
-                          });
+                            setState(() {
+                              _hasError = false;
+                              selectedValue = value;
+                            });
 
-                          if (widget.onSelectedInt != null) {
-                            widget.onSelectedInt!(value.value);
-                          } else if (widget.onSelectedString != null) {
-                            widget.onSelectedString!(value.label);
-                          }
-                        },
-                      ),
+                            if (widget.onSelectedInt != null) {
+                              widget.onSelectedInt!(value.value);
+                            } else if (widget.onSelectedString != null) {
+                              widget.onSelectedString!(value.label);
+                            }
+                          },
+                        );
+                      },
                       loading: () => SizedBox(
                         height: 44,
                         width: double.infinity,

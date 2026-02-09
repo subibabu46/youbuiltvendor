@@ -71,7 +71,13 @@ class _UploadFileState extends ConsumerState<UploadFile> {
                       color: Color(0xfff4f4f4),
                     ),
                     child: selectedFile != null
-                        ? Image.file(selectedFile!, fit: BoxFit.contain)
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.file(
+                              selectedFile!,
+                              fit: BoxFit.contain,
+                            ),
+                          )
                         : null,
                   ),
                   Positioned(

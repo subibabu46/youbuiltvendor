@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:design_task_1/models/get_model.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/register_step_1_model.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
@@ -14,142 +13,64 @@ class StoreRepository {
 
   StoreRepository({required this.storeService});
 
-  Future<List<GetModel>> fetchCountryCodes() async {
-    try {
-      final response = await storeService.fetchCountryCodes();
-      log('fetchCountryCode: ${response.data}');
-      if (response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>;
-
-        final countryCodesJson = data["CountryCode"] as List<dynamic>;
-        final countryCodes = countryCodesJson
-            .map((e) => GetModel.fromJson(e))
-            .toList();
-        return countryCodes;
-      }
-
-      return [];
-    } catch (e) {
-      log('fetchCountryCodes: $e');
-      rethrow;
-    }
+  Future<ResponseModel> fetchCountryCodes() async {
+    return _apiCallHelper(
+      'fetchCountryCodes',
+      () => storeService.fetchCountryCodes(),
+      label: 'CountryCode',
+    );
   }
 
-  Future<List<GetModel>> fetchBusinessTypes() async {
-    try {
-      final response = await storeService.fetchBusinessTypes();
-      log('fetchBusinessTypes: ${response.data}');
-      if (response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>;
-
-        final businessTypesJson = data["BusinessTypeDropDown"] as List<dynamic>;
-        final businessTypes = businessTypesJson
-            .map((e) => GetModel.fromJson(e))
-            .toList();
-        return businessTypes;
-      }
-
-      return [];
-    } catch (e) {
-      log('fetchBusinessTypes: $e');
-      rethrow;
-    }
+  Future<ResponseModel> fetchBusinessTypes() async {
+    return _apiCallHelper(
+      'fetchBusinessTypes',
+      () => storeService.fetchBusinessTypes(),
+      label: 'BusinessTypeDropDown',
+    );
   }
 
-  Future<List<GetModel>> fetchCountries() async {
-    try {
-      final response = await storeService.fetchCountries();
-      log('fetchCountries: ${response.data}');
-      if (response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>;
-
-        final countriesJson = data["CountryDropDown"] as List<dynamic>;
-        final countries = countriesJson
-            .map((e) => GetModel.fromJson(e))
-            .toList();
-        return countries;
-      }
-
-      return [];
-    } catch (e) {
-      log('fetchCountries: $e');
-      rethrow;
-    }
+  Future<ResponseModel> fetchCountries() async {
+    return _apiCallHelper(
+      'fetchCountries',
+      () => storeService.fetchCountries(),
+      label: 'CountryDropDown',
+    );
   }
 
-  Future<List<GetModel>> fetchStates(String pinCode) async {
-    try {
-      final response = await storeService.fetchStates(pinCode);
-      log('fetchStates: ${response.data}');
-      if (response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>;
-
-        final statesJson = data["StatesDropDown"] as List<dynamic>;
-        final states = statesJson.map((e) => GetModel.fromJson(e)).toList();
-        return states;
-      }
-
-      return [];
-    } catch (e) {
-      log('fetchStates: $e');
-      rethrow;
-    }
+  Future<ResponseModel> fetchStates(String pinCode) async {
+    return _apiCallHelper(
+      'fetchStates',
+      () => storeService.fetchStates(pinCode),
+      label: 'StatesDropDown',
+    );
   }
 
-  Future<List<GetModel>> fetchDistricts(String pinCode) async {
-    try {
-      final response = await storeService.fetchDistricts(pinCode);
-      log('fetchDistricts: ${response.data}');
-      if (response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>;
-
-        final districtsJson = data["DistrictDropDown"] as List<dynamic>;
-        final districts = districtsJson
-            .map((e) => GetModel.fromJson(e))
-            .toList();
-        return districts;
-      }
-
-      return [];
-    } catch (e) {
-      log('fetchDistricts: $e');
-      rethrow;
-    }
+  Future<ResponseModel> fetchDistricts(String pinCode) async {
+    return _apiCallHelper(
+      'fetchDistricts',
+      () => storeService.fetchDistricts(pinCode),
+      label: 'DistrictDropDown',
+    );
   }
 
   Future<ResponseModel> sendOtp(UserModel userInfo) async {
-    try {
-      final data = userInfo.toJson();
-      final response = await storeService.sendOtp(data);
-      log('sendOtp: ${response.data}');
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return ResponseModel.success(response.data);
-      } else if (response.statusCode == 400 || response.statusCode == 404) {
-        return ResponseModel.error(response.data);
-      } else {
-        return ResponseModel.error(response.data);
-      }
-    } catch (e) {
-      log('sendOtp: $e');
-      rethrow;
-    }
+    final data = userInfo.toJson();
+    return _apiCallHelper(
+      'sendOtp',
+
+      putData: data,
+      () => storeService.sendOtp(data),
+    );
   }
 
   Future<ResponseModel> verifyOtp(OtpModel otpInfo) async {
-    try {
-      final data = otpInfo.toJson();
-      final response = await storeService.verifyOtp(data);
-      log('verifyOtp: ${response.data}');
+    final data = otpInfo.toJson();
+    return _apiCallHelper(
+      'sendOtp',
 
-      if (response.statusCode == 200) {
-        return ResponseModel.success(response.data);
-      }
-
-      return ResponseModel.error(response.data);
-    } catch (e) {
-      log('verifyOtp: $e');
-      rethrow;
-    }
+      putData: data,
+      () => storeService.verifyOtp(data),
+    );
   }
 
   Future<ResponseModel> registerStep1(
@@ -159,7 +80,7 @@ class StoreRepository {
 
     return _apiCallHelper(
       'registerStep1',
-      data,
+      putData: data,
       () => storeService.registerStep1(data),
     );
   }
@@ -172,7 +93,7 @@ class StoreRepository {
     return _apiCallHelper(
       'registerStep2',
 
-      data,
+      putData: data,
       () => storeService.registerStep2(data, stepId),
       id: stepId,
     );
@@ -186,7 +107,7 @@ class StoreRepository {
     return _apiCallHelper(
       'registerStep3',
 
-      data,
+      putData: data,
       () => storeService.registerStep3(data, stepId),
       id: stepId,
     );
@@ -195,14 +116,15 @@ class StoreRepository {
   Future<ResponseModel> _apiCallHelper(
     String name,
 
-    dynamic inputData,
     Future<Response> Function() apiCall, {
+    String? label,
     int? id,
+    dynamic putData,
   }) async {
     try {
       log('=== Starting $name ===');
-      log('Step ID: $id');
-      log('Data: $inputData');
+      if (id != null) log('Step ID: $id');
+      if (putData != null) log('Data: $putData');
 
       final response = await apiCall();
 
@@ -211,10 +133,10 @@ class StoreRepository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log('$name successful');
-        return ResponseModel.success(response.data);
+        return ResponseModel.success(response.data, label: label);
       } else if (response.statusCode == 400 || response.statusCode == 404) {
         log('$name returned client error');
-        return ResponseModel.error(response.data);
+        return ResponseModel.error(response.data, label: label);
       }
 
       log('$name unexpected status code: ${response.statusCode}');

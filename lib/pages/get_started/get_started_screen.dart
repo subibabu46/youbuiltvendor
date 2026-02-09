@@ -1,12 +1,11 @@
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/pages/get_started/widgets/register_button.dart';
 import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
+import 'package:design_task_1/pages/store_registration/provider/register_type_provider.dart';
 import 'package:design_task_1/pages/store_registration/send_otp_screen.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-enum Business { store, service }
 
 class GetStartedScreen extends ConsumerStatefulWidget {
   const GetStartedScreen({super.key});
@@ -16,9 +15,10 @@ class GetStartedScreen extends ConsumerStatefulWidget {
 }
 
 class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
-  Business? selectedType;
+  RegisterType selectedType = RegisterType.none;
   @override
   Widget build(BuildContext context) {
+    selectedType = ref.watch(registerTypeProvider);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -52,10 +52,12 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                 height: 80,
                 onPressed: () {
                   setState(() {
-                    selectedType = Business.store;
+                    selectedType = RegisterType.store;
+                    ref.read(registerTypeProvider.notifier).state =
+                        RegisterType.store;
                   });
                 },
-                isPressed: selectedType == Business.store,
+                isPressed: selectedType == RegisterType.store,
               ),
               SizedBox(height: 24),
               RegisterButton(
@@ -66,10 +68,12 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                 height: 80,
                 onPressed: () {
                   setState(() {
-                    selectedType = Business.service;
+                    selectedType = RegisterType.service;
+                    ref.read(registerTypeProvider.notifier).state =
+                        RegisterType.service;
                   });
                 },
-                isPressed: selectedType == Business.service,
+                isPressed: selectedType == RegisterType.service,
               ),
             ],
           ),
@@ -80,18 +84,17 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
         child: NextButton(
           buttonText: 'Get Started',
           onPressed: () async {
-            if (selectedType == null) {
+            if (selectedType == RegisterType.none) {
               messageTost("Please choose one to continue", context);
               return;
             }
-            if (selectedType == Business.store) {
-              if (!await checkConnection(context, ref)) return;
-              if (context.mounted) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SendOtpScreen()),
-                );
-              }
+
+            if (!await checkConnection(context, ref)) return;
+            if (context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SendOtpScreen()),
+              );
             }
           },
         ),

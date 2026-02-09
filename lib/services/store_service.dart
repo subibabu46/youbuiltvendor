@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -105,7 +104,6 @@ class StoreService {
 
   Future<Response> sendOtp(Map<String, dynamic> data) async {
     try {
-      log(data.toString());
       final response = await dio.post("/api/users/sendOtp", data: data);
 
       return response;
@@ -140,7 +138,6 @@ class StoreService {
 
   Future<Response> registerStep1(Map<String, dynamic> data) async {
     try {
-      log('step1:$data');
       final response = await dio.post(
         "/api/users/registrationStep1",
         data: data,
@@ -161,7 +158,6 @@ class StoreService {
 
   Future<Response> registerStep2(Map<String, dynamic> data, int stepId) async {
     try {
-      log("step2 : $data");
       final response = await dio.patch(
         "/api/users/registrationStep2/$stepId",
         data: data,
@@ -183,7 +179,6 @@ class StoreService {
   // Future<Response> registerStep3(Map<String, dynamic> data, int stepId) async {
   //   try {
   //     final formData = FormData();
-  //     stepId = 90;
 
   //     print('=== Starting registerStep3 ===');
   //     print('Step ID: $stepId');

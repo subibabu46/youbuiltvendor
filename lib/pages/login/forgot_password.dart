@@ -1,25 +1,25 @@
 import 'package:design_task_1/pages/error/check_internet_screen.dart';
-import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/store_registration/widgets/input_text.dart';
+import 'package:design_task_1/utils/next_button.dart';
+import 'package:design_task_1/utils/input_number.dart';
 import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ChangePassword extends ConsumerStatefulWidget {
-  const ChangePassword({super.key});
+class ForgotPassword extends ConsumerStatefulWidget {
+  const ForgotPassword({super.key});
 
   @override
-  ConsumerState<ChangePassword> createState() => _ChangePasswordState();
+  ConsumerState<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
-class _ChangePasswordState extends ConsumerState<ChangePassword> {
-  TextEditingController passwordController = TextEditingController();
+class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
+  TextEditingController numberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    passwordController.dispose();
+    numberController.dispose();
     super.dispose();
   }
 
@@ -47,7 +47,7 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Change \nPassword',
+                              'Forgot \nPassword',
                               style: TextStyle(
                                 color: Color(0xff2c2c2c),
                                 fontWeight: FontWeight.w700,
@@ -56,7 +56,7 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              'Enter a strong and password for your account',
+                              'Enter your registered phone number',
                               style: TextStyle(
                                 color: Color(0xff737373),
                                 fontWeight: FontWeight.w500,
@@ -64,19 +64,12 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
                               ),
                             ),
                             SizedBox(height: 8),
-                            InputText(
-                              isPasswordMode: true,
+                            InputNumber(
                               isFieldRequired: false,
-                              controller: passwordController,
-                              label: 'New Password',
-                              hintText: 'Enter new password',
-                            ),
-                            InputText(
-                              isPasswordMode: true,
-                              isFieldRequired: false,
-                              controller: passwordController,
-                              label: 'Confirm Password',
-                              hintText: 'Renter new password',
+                              controller: numberController,
+                              label: 'Phone Number',
+                              hintText: 'Enter number',
+                              onCountryCodeChanged: (code) {},
                             ),
                           ],
                         ),
@@ -90,7 +83,7 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         NextButton(
-                          buttonText: 'Submit',
+                          buttonText: 'Verify',
                           onPressed: () async {
                             final isValid = _formKey.currentState!.validate();
 

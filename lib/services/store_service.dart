@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:design_task_1/constants/api_key.dart';
 import 'package:dio/dio.dart';
 
 import 'package:http_parser/http_parser.dart';
@@ -8,14 +9,14 @@ import 'package:mime/mime.dart';
 class StoreService {
   late final Dio dio = Dio(
     BaseOptions(
-      baseUrl: "https://youbuilt-jrqd6.ondigitalocean.app",
+      baseUrl: Api.key,
       headers: {"Content-Type": "application/json"},
     ),
   );
 
   Future<Response> fetchCountryCodes() async {
     try {
-      final response = await dio.get("/api/stores/countryCodeDropDown");
+      final response = await dio.get(Api.countryCode);
 
       return response;
     } on DioException catch (e) {
@@ -32,7 +33,7 @@ class StoreService {
 
   Future<Response> fetchBusinessTypes() async {
     try {
-      final response = await dio.get("/api/users/businessTypeDropDown");
+      final response = await dio.get(Api.businessType);
 
       return response;
     } on DioException catch (e) {
@@ -49,7 +50,7 @@ class StoreService {
 
   Future<Response> fetchCountries() async {
     try {
-      final response = await dio.get("/api/users/countryDropDown");
+      final response = await dio.get(Api.countries);
 
       return response;
     } on DioException catch (e) {
@@ -66,9 +67,7 @@ class StoreService {
 
   Future<Response> fetchStates(String pinCode) async {
     try {
-      final response = await dio.get(
-        "/api/users/statesDropDown?pinCode=$pinCode",
-      );
+      final response = await dio.get("$Api.states$pinCode");
 
       return response;
     } on DioException catch (e) {
@@ -85,9 +84,7 @@ class StoreService {
 
   Future<Response> fetchDistricts(String pinCode) async {
     try {
-      final response = await dio.get(
-        "/api/users/districtDropDown?pinCode=$pinCode",
-      );
+      final response = await dio.get("$Api.districts$pinCode");
 
       return response;
     } on DioException catch (e) {
@@ -104,7 +101,7 @@ class StoreService {
 
   Future<Response> sendOtp(Map<String, dynamic> data) async {
     try {
-      final response = await dio.post("/api/users/sendOtp", data: data);
+      final response = await dio.post(Api.sendOtp, data: data);
 
       return response;
     } on DioException catch (e) {
@@ -121,7 +118,7 @@ class StoreService {
 
   Future<Response> verifyOtp(Map<String, dynamic> data) async {
     try {
-      final response = await dio.post("/api/users/verifyOtp", data: data);
+      final response = await dio.post(Api.verifyOtp, data: data);
 
       return response;
     } on DioException catch (e) {
@@ -138,10 +135,7 @@ class StoreService {
 
   Future<Response> registerStep1(Map<String, dynamic> data) async {
     try {
-      final response = await dio.post(
-        "/api/users/registrationStep1",
-        data: data,
-      );
+      final response = await dio.post(Api.registerStep1, data: data);
 
       return response;
     } on DioException catch (e) {
@@ -159,7 +153,7 @@ class StoreService {
   Future<Response> registerStep2(Map<String, dynamic> data, int stepId) async {
     try {
       final response = await dio.patch(
-        "/api/users/registrationStep2/$stepId",
+        "${Api.registerStep2}$stepId",
         data: data,
       );
 
@@ -270,7 +264,7 @@ class StoreService {
     }
 
     return dio.patch(
-      "/api/users/registrationStep3/$stepId",
+      "${Api.registerStep3}$stepId",
       data: formData,
       options: Options(headers: {'Content-Type': 'multipart/form-data'}),
     );

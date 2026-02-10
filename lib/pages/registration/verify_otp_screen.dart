@@ -4,9 +4,9 @@ import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/user_model.dart';
-import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/store_registration/register_step_1_screen.dart';
-import 'package:design_task_1/pages/store_registration/provider/timer_provider.dart';
+import 'package:design_task_1/utils/next_button.dart';
+import 'package:design_task_1/pages/registration/register_step_1_screen.dart';
+import 'package:design_task_1/providers/timer_provider.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
@@ -241,16 +241,22 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                               final pref = ref
                                   .watch(sharedPreferencesProvider)
                                   .value;
-                              pref?.setBool(otpVerified, result.status);
+                              pref?.setBool(
+                                SharedPrefNames.otpVerified,
+                                result.status,
+                              );
                               if (context.mounted) {
                                 if (result.status) {
                                   isOtpVerified = true;
-                                  pref?.setStringList(userInfoCache, [
-                                    userInfo.code,
-                                    userInfo.name,
-                                    userInfo.phoneNumber,
-                                    userInfo.type,
-                                  ]);
+                                  pref?.setStringList(
+                                    SharedPrefNames.userInfoCache,
+                                    [
+                                      userInfo.code,
+                                      userInfo.name,
+                                      userInfo.phoneNumber,
+                                      userInfo.type,
+                                    ],
+                                  );
 
                                   messageTost(result.message, context);
                                   Future.delayed(

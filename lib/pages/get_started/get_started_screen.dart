@@ -1,8 +1,8 @@
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/pages/get_started/widgets/register_button.dart';
-import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/store_registration/provider/register_type_provider.dart';
-import 'package:design_task_1/pages/store_registration/send_otp_screen.dart';
+import 'package:design_task_1/utils/next_button.dart';
+import 'package:design_task_1/providers/register_type_provider.dart';
+import 'package:design_task_1/pages/registration/send_otp_screen.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

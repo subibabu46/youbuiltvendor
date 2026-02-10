@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Description extends StatelessWidget {
-  const Description({super.key, required this.title, required this.content});
+class Content extends StatelessWidget {
+  const Content({super.key, required this.title, required this.content});
 
   final String title;
   final String content;

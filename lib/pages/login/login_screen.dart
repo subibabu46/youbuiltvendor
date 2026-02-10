@@ -1,7 +1,7 @@
 import 'package:design_task_1/pages/error/check_internet_screen.dart';
-import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/store_registration/send_otp_screen.dart';
-import 'package:design_task_1/pages/store_registration/widgets/input_number.dart';
+import 'package:design_task_1/utils/next_button.dart';
+import 'package:design_task_1/pages/registration/send_otp_screen.dart';
+import 'package:design_task_1/utils/input_number.dart';
 import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/gestures.dart';

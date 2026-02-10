@@ -1,4 +1,4 @@
-import 'package:design_task_1/pages/onboarding/widgets/description.dart';
+import 'package:design_task_1/pages/onboarding/widgets/content.dart';
 import 'package:flutter/material.dart';
 
 const items = [
@@ -19,15 +19,15 @@ const items = [
   ],
 ];
 
-class Details extends StatefulWidget {
+class PageViewWidget extends StatefulWidget {
   final PageController pageController;
-  const Details({super.key, required this.pageController});
+  const PageViewWidget({super.key, required this.pageController});
 
   @override
-  State<Details> createState() => _DetailsState();
+  State<PageViewWidget> createState() => _PageViewWidgetState();
 }
 
-class _DetailsState extends State<Details> {
+class _PageViewWidgetState extends State<PageViewWidget> {
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
@@ -45,7 +45,7 @@ class _DetailsState extends State<Details> {
             ),
           ),
 
-          Description(title: items[i][1], content: items[i][2]),
+          Content(title: items[i][1], content: items[i][2]),
           SizedBox(height: 40),
         ],
       ),

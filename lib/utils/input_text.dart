@@ -59,7 +59,7 @@ class _InputTextState extends State<InputText> {
                   enabled: widget.isEnabled,
                   controller: widget.controller,
                   onChanged: widget.onChanged,
-                  obscureText: !_isEyeVisible,
+                  obscureText: !_isEyeVisible && widget.isPasswordMode,
                   decoration: InputDecoration(
                     errorStyle: TextStyle(color: Colors.red),
                     hintText: widget.hintText ?? 'Enter details',

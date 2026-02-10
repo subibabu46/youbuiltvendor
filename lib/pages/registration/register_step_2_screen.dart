@@ -1,11 +1,11 @@
 import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
-import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/store_registration/register_step_3_screen.dart';
-import 'package:design_task_1/pages/store_registration/widgets/input_select.dart';
-import 'package:design_task_1/pages/store_registration/widgets/input_text.dart';
-import 'package:design_task_1/pages/store_registration/widgets/steps_bubbles.dart';
+import 'package:design_task_1/utils/next_button.dart';
+import 'package:design_task_1/pages/registration/register_step_3_screen.dart';
+import 'package:design_task_1/utils/input_select.dart';
+import 'package:design_task_1/utils/input_text.dart';
+import 'package:design_task_1/pages/registration/widgets/steps_bubbles.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
@@ -149,7 +149,7 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
     } else {
       if (!await checkConnection(context, ref)) return;
       final registerStepId = await SharedPrefCatch.instance.getInt(
-        name: stepId,
+        name: SharedPrefNames.stepId,
       );
       if (registerStepId == null) return;
       final registerStep2Info = RegisterStep2Model(
@@ -171,7 +171,7 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
           ),
         );
         final pref = ref.watch(sharedPreferencesProvider).value;
-        pref?.setInt(level, result.data?['completedLevel']);
+        pref?.setInt(SharedPrefNames.level, result.data?['completedLevel']);
         if (mounted) {
           if (result.status) {
             messageTost(result.message, context);

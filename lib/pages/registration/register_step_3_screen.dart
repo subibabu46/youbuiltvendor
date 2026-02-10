@@ -4,9 +4,9 @@ import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/register_step_3_model.dart';
 import 'package:design_task_1/pages/home/home_screen.dart';
-import 'package:design_task_1/pages/onboarding/widgets/next_button.dart';
-import 'package:design_task_1/pages/store_registration/widgets/steps_bubbles.dart';
-import 'package:design_task_1/pages/store_registration/widgets/upload_file.dart';
+import 'package:design_task_1/utils/next_button.dart';
+import 'package:design_task_1/pages/registration/widgets/steps_bubbles.dart';
+import 'package:design_task_1/pages/registration/widgets/upload_file.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
@@ -115,7 +115,7 @@ class _RegisterStep3ScreenState extends ConsumerState<RegisterStep3Screen> {
       if (!await checkConnection(context, ref)) return;
 
       final registerStepId = await SharedPrefCatch.instance.getInt(
-        name: stepId,
+        name: SharedPrefNames.stepId,
       );
       if (registerStepId == null) return;
       final registerStep3Info = RegisterStep3Model(
@@ -135,8 +135,11 @@ class _RegisterStep3ScreenState extends ConsumerState<RegisterStep3Screen> {
           ),
         );
         final pref = ref.watch(sharedPreferencesProvider).value;
-        pref?.setInt(level, result.data?['completedLevel']);
-        pref?.setString(accessToken, result.data?['accessToken']);
+        pref?.setInt(SharedPrefNames.level, result.data?['completedLevel']);
+        pref?.setString(
+          SharedPrefNames.accessToken,
+          result.data?['accessToken'],
+        );
         if (mounted) {
           if (result.status) {
             messageTost(result.message, context);

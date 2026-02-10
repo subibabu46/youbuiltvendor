@@ -4,9 +4,9 @@ import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/pages/home/home_screen.dart';
 import 'package:design_task_1/pages/onboarding/onboarding_screen.dart';
-import 'package:design_task_1/pages/store_registration/register_step_1_screen.dart';
-import 'package:design_task_1/pages/store_registration/register_step_2_screen.dart';
-import 'package:design_task_1/pages/store_registration/register_step_3_screen.dart';
+import 'package:design_task_1/pages/registration/register_step_1_screen.dart';
+import 'package:design_task_1/pages/registration/register_step_2_screen.dart';
+import 'package:design_task_1/pages/registration/register_step_3_screen.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
@@ -24,23 +24,29 @@ class SplashScreen extends ConsumerWidget {
         if (!context.mounted) return;
 
         try {
-          final registerId = pref.getInt(stepId);
-          final registerLevel = pref.getInt(level);
-          final accessTokenId = pref.getString(accessToken);
-          final isOtpVerified = pref.getBool(otpVerified);
-          final isUserInfo = pref.getStringList(userInfoCache);
-          SharedPrefCatch.instance.addInt(name: stepId, value: registerId);
-          SharedPrefCatch.instance.addInt(name: level, value: registerLevel);
+          final registerId = pref.getInt(SharedPrefNames.stepId);
+          final registerLevel = pref.getInt(SharedPrefNames.level);
+          final accessTokenId = pref.getString(SharedPrefNames.accessToken);
+          final isOtpVerified = pref.getBool(SharedPrefNames.otpVerified);
+          final isUserInfo = pref.getStringList(SharedPrefNames.userInfoCache);
+          SharedPrefCatch.instance.addInt(
+            name: SharedPrefNames.stepId,
+            value: registerId,
+          );
+          SharedPrefCatch.instance.addInt(
+            name: SharedPrefNames.level,
+            value: registerLevel,
+          );
           SharedPrefCatch.instance.addString(
-            name: accessToken,
+            name: SharedPrefNames.accessToken,
             value: accessTokenId,
           );
           SharedPrefCatch.instance.addBool(
-            name: otpVerified,
+            name: SharedPrefNames.otpVerified,
             value: isOtpVerified,
           );
           SharedPrefCatch.instance.addStringList(
-            name: userInfoCache,
+            name: SharedPrefNames.userInfoCache,
             value: isUserInfo,
           );
           log(

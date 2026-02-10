@@ -6,14 +6,16 @@ import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ForgotPassword extends ConsumerStatefulWidget {
-  const ForgotPassword({super.key});
+class ForgotPasswordScreen extends ConsumerStatefulWidget {
+  final String phoneNumber;
+  const ForgotPasswordScreen({super.key, required this.phoneNumber});
 
   @override
-  ConsumerState<ForgotPassword> createState() => _ForgotPasswordState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
+class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   TextEditingController numberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -25,6 +27,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
+    numberController.text = widget.phoneNumber;
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

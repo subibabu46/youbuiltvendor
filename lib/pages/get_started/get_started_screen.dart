@@ -16,6 +16,7 @@ class GetStartedScreen extends ConsumerStatefulWidget {
 
 class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
   RegisterType selectedType = RegisterType.none;
+
   @override
   Widget build(BuildContext context) {
     selectedType = ref.watch(registerTypeProvider);

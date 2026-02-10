@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:design_task_1/models/login_model.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/register_step_1_model.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
@@ -63,6 +64,16 @@ class StoreRepository {
     );
   }
 
+  Future<ResponseModel> resendOtp(UserModel userInfo) async {
+    final data = userInfo.toJson();
+    return _apiCallHelper(
+      'resendOtp',
+
+      putData: data,
+      () => storeService.resendOtp(data),
+    );
+  }
+
   Future<ResponseModel> verifyOtp(OtpModel otpInfo) async {
     final data = otpInfo.toJson();
     return _apiCallHelper(
@@ -70,6 +81,17 @@ class StoreRepository {
 
       putData: data,
       () => storeService.verifyOtp(data),
+    );
+  }
+
+  Future<ResponseModel> login(LoginModel loginInfo) async {
+    final data = loginInfo.toJson();
+
+    return _apiCallHelper(
+      'login',
+      putData: data,
+      label: 'accessToken',
+      () => storeService.login(data),
     );
   }
 

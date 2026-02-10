@@ -1,3 +1,4 @@
+import 'package:design_task_1/models/login_model.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/register_step_1_model.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
@@ -66,6 +67,15 @@ final sendOtpProvider = Provider.family<Future<ResponseModel>, UserModel>((
   return repo.sendOtp(value);
 });
 
+//Resend Otp
+final resendOtpProvider = Provider.family<Future<ResponseModel>, UserModel>((
+  ref,
+  value,
+) {
+  final repo = ref.read(storeRepositoryProvider);
+  return repo.resendOtp(value);
+});
+
 //Verify Otp
 final verifyOtpProvider = Provider.family<Future<ResponseModel>, OtpModel>((
   ref,
@@ -73,6 +83,15 @@ final verifyOtpProvider = Provider.family<Future<ResponseModel>, OtpModel>((
 ) {
   final repo = ref.read(storeRepositoryProvider);
   return repo.verifyOtp(value);
+});
+
+//Login
+final loginProvider = Provider.family<Future<ResponseModel>, LoginModel>((
+  ref,
+  value,
+) {
+  final repo = ref.read(storeRepositoryProvider);
+  return repo.login(value);
 });
 
 //Register Step 1

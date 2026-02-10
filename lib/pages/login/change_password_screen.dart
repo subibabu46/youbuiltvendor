@@ -6,14 +6,15 @@ import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ChangePassword extends ConsumerStatefulWidget {
-  const ChangePassword({super.key});
+class ChangePasswordScreen extends ConsumerStatefulWidget {
+  const ChangePasswordScreen({super.key});
 
   @override
-  ConsumerState<ChangePassword> createState() => _ChangePasswordState();
+  ConsumerState<ChangePasswordScreen> createState() =>
+      _ChangePasswordScreenState();
 }
 
-class _ChangePasswordState extends ConsumerState<ChangePassword> {
+class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 

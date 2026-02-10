@@ -2,21 +2,27 @@ class ResponseModel {
   final bool status;
   final String message;
   final dynamic data;
+  final int? id;
 
-  ResponseModel({required this.status, required this.message, this.data});
+  ResponseModel({
+    required this.status,
+    required this.message,
+    this.data,
+    this.id,
+  });
 
   factory ResponseModel.success(Map<String, dynamic> json, {String? label}) {
     return ResponseModel(
       status: true,
       message: json['message'] ?? 'Success',
-      data:
-          (label != null &&
-              json.containsKey(label) &&
-              json[label] != null &&
-              json[label] is List &&
-              json[label] is List)
-          ? (json[label] as List).map((e) => GetModel.fromJson(e)).toList()
-          : json['data'] ?? {},
+      data: label != null && json[label] != null
+          ? json[label] is List
+                ? (json[label] as List)
+                      .map((e) => GetModel.fromJson(e))
+                      .toList()
+                : json[label]
+          : json['data'],
+      id: json['Id'],
     );
   }
 

@@ -38,7 +38,7 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
   String? pinCode;
   final _formKey = GlobalKey<FormState>();
   final controllers = _RegisterStep2Controllers();
-  @override
+
   @override
   Widget build(BuildContext context) {
     final countriesAsync = ref.watch(countriesProvider);

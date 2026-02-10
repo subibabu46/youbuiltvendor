@@ -67,7 +67,7 @@ class StoreService {
 
   Future<Response> fetchStates(String pinCode) async {
     try {
-      final response = await dio.get("$Api.states$pinCode");
+      final response = await dio.get("${Api.states}$pinCode");
 
       return response;
     } on DioException catch (e) {
@@ -84,7 +84,7 @@ class StoreService {
 
   Future<Response> fetchDistricts(String pinCode) async {
     try {
-      final response = await dio.get("$Api.districts$pinCode");
+      final response = await dio.get("${Api.districts}$pinCode");
 
       return response;
     } on DioException catch (e) {
@@ -116,9 +116,43 @@ class StoreService {
     }
   }
 
+  Future<Response> resendOtp(Map<String, dynamic> data) async {
+    try {
+      final response = await dio.post(Api.resendOtp, data: data);
+
+      return response;
+    } on DioException catch (e) {
+      final message =
+          e.response?.data['message'] ??
+          e.response?.data['error'] ??
+          'Something went wrong';
+
+      throw message;
+    } catch (e) {
+      throw 'Unexpected error occurred';
+    }
+  }
+
   Future<Response> verifyOtp(Map<String, dynamic> data) async {
     try {
       final response = await dio.post(Api.verifyOtp, data: data);
+
+      return response;
+    } on DioException catch (e) {
+      final message =
+          e.response?.data['message'] ??
+          e.response?.data['error'] ??
+          'Something went wrong';
+
+      throw message;
+    } catch (e) {
+      throw 'Unexpected error occurred';
+    }
+  }
+
+  Future<Response> login(Map<String, dynamic> data) async {
+    try {
+      final response = await dio.post(Api.login, data: data);
 
       return response;
     } on DioException catch (e) {

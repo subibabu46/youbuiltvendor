@@ -1,8 +1,14 @@
-import 'package:design_task_1/pages/error/check_internet_screen.dart';
+import 'package:design_task_1/constants/shared_pref_names.dart';
+import 'package:design_task_1/helpers/check_connection.dart';
+import 'package:design_task_1/models/login_model.dart';
+import 'package:design_task_1/pages/home/home_screen.dart';
+import 'package:design_task_1/pages/login/forgot_password_screen.dart';
+import 'package:design_task_1/providers/shared_pref_provider.dart';
+import 'package:design_task_1/providers/store_provider.dart';
+import 'package:design_task_1/utils/input_text.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/pages/registration/send_otp_screen.dart';
 import 'package:design_task_1/utils/input_number.dart';
-import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +22,15 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  TextEditingController numberController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  String? numberCode;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    numberController.dispose();
+    phoneNumberController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -68,10 +77,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             SizedBox(height: 8),
                             InputNumber(
                               isFieldRequired: false,
-                              controller: numberController,
+                              controller: phoneNumberController,
                               label: 'Phone Number',
                               hintText: 'Enter number',
-                              onCountryCodeChanged: (code) {},
+                              onCountryCodeChanged: (code) => numberCode = code,
+                            ),
+                            InputText(
+                              isPasswordMode: true,
+                              isFieldRequired: false,
+                              controller: passwordController,
+                              label: 'Password',
+                              hintText: 'Enter password',
+                            ),
+                            Align(
+                              alignment: AlignmentGeometry.centerRight,
+                              child: GestureDetector(
+                                child: Text(
+                                  'Forgot password? ',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ForgotPasswordScreen(
+                                            phoneNumber:
+                                                phoneNumberController.text,
+                                          ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -118,32 +155,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         SizedBox(height: 10),
                         NextButton(
                           buttonText: 'Submit',
-                          onPressed: () async {
-                            final isValid = _formKey.currentState!.validate();
-
-                            if (!isValid) {
-                              messageTost('Field shouldn\'t be empty', context);
-                            } else {
-                              final isConnected = await ref
-                                  .read(connectivityServiceProvider)
-                                  .isConnected();
-                              if (!isConnected) {
-                                if (context.mounted) {
-                                  messageTost(
-                                    "No internet connection",
-                                    context,
-                                  );
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          CheckInternetScreen(),
-                                    ),
-                                  );
-                                }
-                              } else {}
-                            }
-                          },
+                          onPressed: _submitCall,
                         ),
                         SizedBox(height: 88),
                       ],
@@ -156,5 +168,47 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _submitCall() async {
+    final isValid = _formKey.currentState!.validate();
+
+    if (!isValid) {
+      messageTost('Field shouldn\'t be empty', context);
+    } else {
+      if (!await checkConnection(context, ref)) return;
+      final loginInfo = LoginModel(
+        phoneNumber: phoneNumberController.text,
+        password: passwordController.text,
+      );
+      try {
+        final result = await ref.read(loginProvider(loginInfo));
+        final pref = ref.watch(sharedPreferencesProvider).value;
+        pref?.setInt(SharedPrefNames.stepId, result.id ?? 0);
+        pref?.setString(SharedPrefNames.accessToken, result.data);
+        if (mounted) {
+          if (result.status) {
+            messageTost(result.message, context);
+            Future.delayed(const Duration(seconds: 2), () {
+              if (mounted) {
+                {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    (route) => false,
+                  );
+                }
+              }
+            });
+          } else {
+            messageTost(result.message, context);
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          messageTost(duration: 2, e.toString(), context);
+        }
+      }
+    }
   }
 }

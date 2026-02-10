@@ -184,7 +184,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                                                     type: userInfo.type,
                                                   );
                                                   final result = await ref.read(
-                                                    sendOtpProvider(userInfo),
+                                                    resendOtpProvider(userInfo),
                                                   );
                                                   timerNotifier.start();
 

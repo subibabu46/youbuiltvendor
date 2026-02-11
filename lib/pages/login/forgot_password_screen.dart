@@ -7,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
-  final String phoneNumber;
-  const ForgotPasswordScreen({super.key, required this.phoneNumber});
+  const ForgotPasswordScreen({super.key});
 
   @override
   ConsumerState<ForgotPasswordScreen> createState() =>
@@ -18,21 +17,54 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   TextEditingController numberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final ScrollController _scrollController = ScrollController();
+  bool _isKeyboardOpen = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+
+    if (_isKeyboardOpen != keyboardOpen) {
+      _isKeyboardOpen = keyboardOpen;
+
+      if (!_isKeyboardOpen) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(
+              0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     numberController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    numberController.text = widget.phoneNumber;
+    final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SafeArea(
           child: SingleChildScrollView(
+            controller: _scrollController,
+
+            physics: isKeyboardOpen
+                ? const ScrollPhysics()
+                : const NeverScrollableScrollPhysics(),
             child: SizedBox(
               height: MediaQuery.of(context).size.height,
               child: Column(

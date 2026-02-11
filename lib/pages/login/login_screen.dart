@@ -26,21 +26,52 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   String? numberCode;
   final _formKey = GlobalKey<FormState>();
+  final ScrollController _scrollController = ScrollController();
+  bool _isKeyboardOpen = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+
+    if (_isKeyboardOpen != keyboardOpen) {
+      _isKeyboardOpen = keyboardOpen;
+
+      if (!_isKeyboardOpen) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(
+              0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
     phoneNumberController.dispose();
     passwordController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SafeArea(
           child: SingleChildScrollView(
+            controller: _scrollController,
+            physics: isKeyboardOpen
+                ? const BouncingScrollPhysics()
+                : const NeverScrollableScrollPhysics(),
             child: SizedBox(
               height: MediaQuery.of(context).size.height,
               child: Column(
@@ -101,10 +132,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          ForgotPasswordScreen(
-                                            phoneNumber:
-                                                phoneNumberController.text,
-                                          ),
+                                          ForgotPasswordScreen(),
                                     ),
                                   );
                                 },
@@ -188,7 +216,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         pref?.setString(SharedPrefNames.accessToken, result.data);
         if (mounted) {
           if (result.status) {
-            messageTost(result.message, context);
+            messageTost('Login Successfully', context);
             Future.delayed(const Duration(seconds: 2), () {
               if (mounted) {
                 {

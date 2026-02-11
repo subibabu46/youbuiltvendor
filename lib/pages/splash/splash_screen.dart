@@ -52,6 +52,13 @@ class SplashScreen extends ConsumerWidget {
           log(
             'register Id: $registerId, completed level: $registerLevel, accessToken: $accessTokenId',
           );
+          if (accessTokenId != null) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+            );
+            return;
+          }
           if (isOtpVerified != null && isOtpVerified) {
             if (registerId != null) {
               if (registerLevel == 1) {

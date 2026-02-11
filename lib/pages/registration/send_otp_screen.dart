@@ -24,9 +24,35 @@ class _SendOtpScreenState extends ConsumerState<SendOtpScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController numberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final ScrollController _scrollController = ScrollController();
+  bool _isKeyboardOpen = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+
+    if (_isKeyboardOpen != keyboardOpen) {
+      _isKeyboardOpen = keyboardOpen;
+
+      if (!_isKeyboardOpen) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(
+              0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     nameController.dispose();
     numberController.dispose();
     super.dispose();
@@ -34,12 +60,17 @@ class _SendOtpScreenState extends ConsumerState<SendOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     String selectedCountryCode = '+91';
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SafeArea(
           child: SingleChildScrollView(
+            controller: _scrollController,
+            physics: isKeyboardOpen
+                ? const BouncingScrollPhysics()
+                : const NeverScrollableScrollPhysics(),
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight: MediaQuery.of(context).size.height,

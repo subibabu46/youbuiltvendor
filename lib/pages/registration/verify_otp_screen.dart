@@ -27,11 +27,45 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
   bool isOtpVerified = false;
   final _formKey = GlobalKey<FormState>();
   String otp = '';
+  final ScrollController _scrollController = ScrollController();
+  bool _isKeyboardOpen = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+
+    if (_isKeyboardOpen != keyboardOpen) {
+      _isKeyboardOpen = keyboardOpen;
+
+      if (!_isKeyboardOpen) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(
+              0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final timerState = ref.watch(otpTimerProvider);
     final timerNotifier = ref.read(otpTimerProvider.notifier);
     var userInfo = widget.userInfo;
+
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return Scaffold(
       body: SafeArea(
@@ -40,6 +74,10 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
+              controller: _scrollController,
+              physics: isKeyboardOpen
+                  ? const BouncingScrollPhysics()
+                  : const NeverScrollableScrollPhysics(),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   minHeight: MediaQuery.of(context).size.height,
@@ -216,7 +254,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                          bottom: 64,
+                          bottom: 88,
                           left: 16,
                           right: 16,
                         ),

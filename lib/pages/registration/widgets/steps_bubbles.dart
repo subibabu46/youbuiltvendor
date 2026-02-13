@@ -1,3 +1,4 @@
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:flutter/material.dart';
 
 class StepsBubbles extends StatelessWidget {
@@ -25,14 +26,16 @@ class StepsBubbles extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _stepText('Basic Info', Color(0xff0d0d0d)),
+            _stepText('Basic Info', AppColors.textLabelBubbleActive),
 
             _stepText(
               'Address & Location',
-              isEnable2 ? Color(0xff0d0d0d) : Color(0xff737373),
+              isEnable2
+                  ? AppColors.textLabelBubbleActive
+                  : AppColors.textLabelBubbleInactive,
             ),
 
-            _stepText('Documents', Color(0xff737373)),
+            _stepText('Documents', AppColors.textLabelBubbleInactive),
           ],
         ),
       ],
@@ -46,14 +49,16 @@ class StepsBubbles extends StatelessWidget {
         child: CircleAvatar(
           radius: 20,
           backgroundColor: enabled
-              ? const Color(0xff0d0d0d)
-              : const Color(0xfff4f4f4),
+              ? AppColors.bubbleActive
+              : AppColors.bubbleInactive,
           child: Text(
             text,
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 18,
-              color: enabled ? Colors.white : const Color(0xff737373),
+              color: enabled
+                  ? AppColors.textBubbleActive
+                  : AppColors.textBubbleInactive,
             ),
           ),
         ),
@@ -66,7 +71,9 @@ class StepsBubbles extends StatelessWidget {
       child: Container(
         height: 3,
         decoration: BoxDecoration(
-          color: active ? Colors.black : const Color(0xffd1d5db),
+          color: active
+              ? AppColors.bubbleDivActive
+              : AppColors.bubbleDivInactive,
           borderRadius: BorderRadius.circular(8),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:design_task_1/providers/file_picker_provider.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class _UploadFileState extends ConsumerState<UploadFile> {
                 widget.isRequired
                     ? TextSpan(
                         text: '*',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: AppColors.textRequired),
                       )
                     : TextSpan(),
               ],
@@ -67,8 +68,11 @@ class _UploadFileState extends ConsumerState<UploadFile> {
                     height: 160,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(width: 1, color: Color(0xffd1d5db)),
-                      color: Color(0xfff4f4f4),
+                      border: Border.all(
+                        width: 1,
+                        color: AppColors.borderDefault,
+                      ),
+                      color: AppColors.placeholderImage,
                     ),
                     child: selectedFile != null
                         ? ClipRRect(
@@ -87,7 +91,7 @@ class _UploadFileState extends ConsumerState<UploadFile> {
                       onPressed: () {
                         setState(() => isFileVisible = false);
                       },
-                      icon: Icon(Icons.close, color: Colors.grey),
+                      icon: Icon(Icons.close, color: AppColors.buttonClose),
                     ),
                   ),
                 ],
@@ -114,14 +118,14 @@ class _UploadFileState extends ConsumerState<UploadFile> {
                 dashPattern: [6, 6],
                 strokeWidth: 1,
                 radius: Radius.circular(6),
-                color: Color(0xffc1c1c1),
+                color: AppColors.borderDotted,
               ),
               child: Container(
                 width: 361,
                 height: 58,
                 padding: EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: Color(0xfff4f4f4),
+                  color: AppColors.buttonUpload,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Padding(

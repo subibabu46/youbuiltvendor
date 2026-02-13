@@ -1,3 +1,4 @@
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:flutter/material.dart';
 
 class SkipButton extends StatelessWidget {
@@ -11,10 +12,10 @@ class SkipButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
         decoration: BoxDecoration(
-          color: Color(0xff0D0D0D),
+          color: AppColors.buttonSkip,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Text('Skip', style: TextStyle(color: Colors.white)),
+        child: Text('Skip', style: TextStyle(color: AppColors.textButton)),
       ),
     );
   }

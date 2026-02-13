@@ -1,3 +1,4 @@
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:flutter/material.dart';
 
 class Content extends StatelessWidget {
@@ -16,14 +17,17 @@ class Content extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 33,
-            color: Color(0xFF131313),
+            color: AppColors.textOnboardingTitle,
           ),
         ),
         SizedBox(height: 10),
         Text(
           textAlign: TextAlign.center,
           content,
-          style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontSize: 16),
+          style: TextStyle(
+            color: AppColors.textOnboardingContent,
+            fontSize: 16,
+          ),
         ),
       ],
     );

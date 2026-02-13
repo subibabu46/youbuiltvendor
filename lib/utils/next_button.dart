@@ -1,3 +1,4 @@
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:flutter/material.dart';
 
 class NextButton extends StatelessWidget {
@@ -19,7 +20,7 @@ class NextButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: AppColors.buttonDefault,
           borderRadius: BorderRadius.circular(8),
         ),
 
@@ -28,13 +29,13 @@ class NextButton extends StatelessWidget {
                 child: SizedBox(
                   height: 24,
                   width: 24,
-                  child: CircularProgressIndicator(color: Colors.white),
+                  child: CircularProgressIndicator(color: AppColors.loading),
                 ),
               )
             : Text(
                 buttonText,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.textButton,
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),

@@ -1,4 +1,5 @@
 import 'package:design_task_1/pages/error/check_internet_screen.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/utils/input_text.dart';
 import 'package:design_task_1/providers/connectivity_provider.dart';
@@ -82,7 +83,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                             Text(
                               'Change \nPassword',
                               style: TextStyle(
-                                color: Color(0xff2c2c2c),
+                                color: AppColors.textPrimary,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 32,
                               ),
@@ -91,7 +92,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                             Text(
                               'Enter a strong and password for your account',
                               style: TextStyle(
-                                color: Color(0xff737373),
+                                color: AppColors.textSecondary,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16,
                               ),

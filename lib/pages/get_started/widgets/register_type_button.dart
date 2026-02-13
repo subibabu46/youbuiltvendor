@@ -1,13 +1,14 @@
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:flutter/material.dart';
 
-class RegisterButton extends StatelessWidget {
+class RegisterTypeButton extends StatelessWidget {
   final String title;
   final String content;
   final String image;
   final double width, height;
   final VoidCallback onPressed;
   final bool isPressed;
-  const RegisterButton({
+  const RegisterTypeButton({
     super.key,
     required this.title,
     required this.content,
@@ -27,7 +28,9 @@ class RegisterButton extends StatelessWidget {
         height: 108,
         decoration: BoxDecoration(
           border: Border.all(
-            color: isPressed ? Color(0xffFF3B30) : Color(0xffD1D5DB),
+            color: isPressed
+                ? AppColors.borderRegisterType
+                : AppColors.borderDefault,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
@@ -47,7 +50,7 @@ class RegisterButton extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 20,
-                      color: Color(0xff282828),
+                      color: AppColors.textTitle,
                     ),
                   ),
                   SizedBox(height: 4),
@@ -57,7 +60,7 @@ class RegisterButton extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
-                      color: Color(0xff737373),
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],

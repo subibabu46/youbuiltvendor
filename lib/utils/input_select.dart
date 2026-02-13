@@ -1,4 +1,5 @@
 import 'package:design_task_1/models/response_model.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -54,7 +55,7 @@ class _InputSelectState extends State<InputSelect> {
                 widget.isRequired
                     ? TextSpan(
                         text: '*',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: AppColors.textRequired),
                       )
                     : TextSpan(),
               ],
@@ -66,7 +67,7 @@ class _InputSelectState extends State<InputSelect> {
             padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: Color(0xffc1c1c1)),
+              border: Border.all(color: AppColors.borderNormal),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -80,14 +81,14 @@ class _InputSelectState extends State<InputSelect> {
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: Color(0xffa3a3a3),
+                              color: AppColors.textHint,
                             ),
                           ),
                           icon: Icon(Icons.keyboard_arrow_down),
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
-                            color: Color(0xffa3a3a3),
+                            color: AppColors.textHint,
                           ),
                           isExpanded: true,
                           underline: SizedBox(),
@@ -133,7 +134,7 @@ class _InputSelectState extends State<InputSelect> {
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: Color(0xffa3a3a3),
+                              color: AppColors.textHint,
                             ),
                           ),
                         ),
@@ -146,7 +147,7 @@ class _InputSelectState extends State<InputSelect> {
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: Color(0xffa3a3a3),
+                              color: AppColors.textHint,
                             ),
                           ),
                         ),
@@ -163,7 +164,7 @@ class _InputSelectState extends State<InputSelect> {
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
-                            color: Color(0xffa3a3a3),
+                            color: AppColors.textHint,
                           ),
                         ),
                       ),
@@ -175,7 +176,7 @@ class _InputSelectState extends State<InputSelect> {
               padding: EdgeInsets.only(top: 4, left: 4),
               child: Text(
                 '    ${widget.hintText}',
-                style: TextStyle(color: Colors.red, fontSize: 12),
+                style: TextStyle(color: AppColors.textRequired, fontSize: 12),
               ),
             ),
         ],

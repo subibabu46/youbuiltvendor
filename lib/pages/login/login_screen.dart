@@ -5,6 +5,7 @@ import 'package:design_task_1/pages/home/home_screen.dart';
 import 'package:design_task_1/pages/login/forgot_password_screen.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/input_text.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/pages/registration/send_otp_screen.dart';
@@ -91,7 +92,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             Text(
                               'Welcome \nBack!',
                               style: TextStyle(
-                                color: Color(0xff2c2c2c),
+                                color: AppColors.textPrimary,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 32,
                               ),
@@ -100,7 +101,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             Text(
                               'Login to your Youbuilt account',
                               style: TextStyle(
-                                color: Color(0xff737373),
+                                color: AppColors.textSecondary,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16,
                               ),
@@ -125,7 +126,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               child: GestureDetector(
                                 child: Text(
                                   'Forgot password? ',
-                                  style: TextStyle(color: Colors.blue),
+                                  style: TextStyle(color: AppColors.buttonInfo),
                                 ),
                                 onTap: () {
                                   Navigator.push(
@@ -158,14 +159,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             children: [
                               TextSpan(
                                 text: 'Didn’t registered yet? ',
-                                style: TextStyle(color: Color(0xffa3a3a3)),
+                                style: TextStyle(color: AppColors.textHint),
                               ),
                               TextSpan(
                                 text: 'Register Now',
                                 style: TextStyle(
-                                  color: Colors.red,
+                                  color: AppColors.buttonAction,
                                   decoration: TextDecoration.underline,
-                                  decorationColor: Colors.red,
+                                  decorationColor: AppColors.buttonAction,
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {

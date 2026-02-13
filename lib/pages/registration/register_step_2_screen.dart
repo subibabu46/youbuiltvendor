@@ -1,6 +1,7 @@
 import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/register_step_2_model.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/pages/registration/register_step_3_screen.dart';
 import 'package:design_task_1/utils/input_select.dart';
@@ -38,6 +39,11 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
   String? pinCode;
   final _formKey = GlobalKey<FormState>();
   final controllers = _RegisterStep2Controllers();
+  @override
+  void dispose() {
+    controllers.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +77,7 @@ class _RegisterStep2ScreenState extends ConsumerState<RegisterStep2Screen> {
                           Text(
                             'Registration',
                             style: TextStyle(
-                              color: Color(0xff2c2c2c),
+                              color: AppColors.textPrimary,
                               fontWeight: FontWeight.w700,
                               fontSize: 32,
                             ),

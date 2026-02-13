@@ -4,6 +4,7 @@ import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/otp_model.dart';
 import 'package:design_task_1/models/user_model.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/pages/registration/register_step_1_screen.dart';
 import 'package:design_task_1/providers/timer_provider.dart';
@@ -98,7 +99,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                               Text(
                                 'OTP \nVerification',
                                 style: TextStyle(
-                                  color: Color(0xff2c2c2c),
+                                  color: AppColors.textPrimary,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 32,
                                 ),
@@ -107,7 +108,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                               Text(
                                 'Enter OTP sent to your registered mobile number',
                                 style: TextStyle(
-                                  color: Color(0xff737373),
+                                  color: AppColors.textSecondary,
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16,
                                 ),
@@ -128,7 +129,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                                         },
 
                                         errorTextStyle: TextStyle(
-                                          color: Colors.red,
+                                          color: AppColors.textRequired,
                                           fontSize: 12,
                                         ),
                                         validator: (value) {
@@ -152,7 +153,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                                           ),
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                              color: Color(0xffa3a3a3),
+                                              color: AppColors.borderOtp,
                                             ),
                                             borderRadius: BorderRadius.circular(
                                               8,
@@ -171,7 +172,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                                           ),
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                              color: Colors.red,
+                                              color: AppColors.borderRequired,
                                             ),
                                             borderRadius: BorderRadius.circular(
                                               8,
@@ -195,7 +196,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                                                 ? 'Request OTP in ${timerState.secondsLeft} s'
                                                 : 'Didn’t receive code? ',
                                             style: TextStyle(
-                                              color: Color(0xffa3a3a3),
+                                              color: AppColors.textHint,
                                             ),
                                           ),
                                           TextSpan(
@@ -205,10 +206,11 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                                                 ? ''
                                                 : 'Resend',
                                             style: TextStyle(
-                                              color: Colors.red,
+                                              color: AppColors.buttonAction,
                                               decoration:
                                                   TextDecoration.underline,
-                                              decorationColor: Colors.red,
+                                              decorationColor:
+                                                  AppColors.buttonAction,
                                             ),
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () async {

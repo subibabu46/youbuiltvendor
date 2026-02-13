@@ -1,6 +1,7 @@
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/user_model.dart';
 import 'package:design_task_1/pages/login/login_screen.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/providers/register_type_provider.dart';
 import 'package:design_task_1/utils/input_number.dart';
@@ -95,7 +96,7 @@ class _SendOtpScreenState extends ConsumerState<SendOtpScreen> {
                               Text(
                                 'Let’s \nGet Started',
                                 style: TextStyle(
-                                  color: Color(0xff2c2c2c),
+                                  color: AppColors.textPrimary,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 32,
                                 ),
@@ -104,7 +105,7 @@ class _SendOtpScreenState extends ConsumerState<SendOtpScreen> {
                               Text(
                                 'Tell Us About Yourself',
                                 style: TextStyle(
-                                  color: Color(0xff737373),
+                                  color: AppColors.textSecondary,
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16,
                                 ),
@@ -174,7 +175,7 @@ class _BottomWidget extends ConsumerWidget {
               timerState.secondsLeft > 0
                   ? 'Request OTP in ${timerState.secondsLeft} s'
                   : '',
-              style: TextStyle(color: Color(0xffa3a3a3)),
+              style: TextStyle(color: AppColors.textHint),
             ),
           SizedBox(height: 10),
           Text.rich(
@@ -183,14 +184,14 @@ class _BottomWidget extends ConsumerWidget {
               children: [
                 TextSpan(
                   text: 'Already have an account? ',
-                  style: TextStyle(color: Color(0xffa3a3a3)),
+                  style: TextStyle(color: AppColors.textHint),
                 ),
                 TextSpan(
                   text: 'Login',
                   style: TextStyle(
-                    color: Colors.red,
+                    color: AppColors.buttonAction,
                     decoration: TextDecoration.underline,
-                    decorationColor: Colors.red,
+                    decorationColor: AppColors.buttonAction,
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {

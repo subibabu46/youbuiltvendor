@@ -1,5 +1,6 @@
 import 'package:design_task_1/pages/get_started/get_started_screen.dart';
 import 'package:design_task_1/pages/onboarding/widgets/page_view_widget.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/pages/onboarding/widgets/skip_button.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +61,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 dotHeight: 8,
                 dotWidth: 8,
                 spacing: 8,
-                activeDotColor: Color(0xFF000000),
-                dotColor: Color(0xFFD9D9D9),
+                activeDotColor: AppColors.dotActive,
+                dotColor: AppColors.dotInactive,
               ),
             ),
             SizedBox(height: 24),

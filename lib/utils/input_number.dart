@@ -1,5 +1,6 @@
 import 'package:design_task_1/models/response_model.dart';
 import 'package:design_task_1/providers/store_provider.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/message_toast.dart';
 import 'package:design_task_1/utils/shimmer_effect.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                 isFieldRequired
                     ? TextSpan(
                         text: '*',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: AppColors.textRequired),
                       )
                     : TextSpan(),
               ],
@@ -68,7 +69,9 @@ class _InputNumberState extends ConsumerState<InputNumber> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
               border: Border.all(
-                color: _hasError ? Colors.red : const Color(0xffc1c1c1),
+                color: _hasError
+                    ? AppColors.borderRequired
+                    : AppColors.borderNormal,
               ),
             ),
             child: Row(
@@ -112,7 +115,11 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                   },
                 ),
                 SizedBox(width: 8),
-                Container(width: 1, height: 24, color: Color(0xffe0e0e0)),
+                Container(
+                  width: 1,
+                  height: 24,
+                  color: AppColors.dividerTextField,
+                ),
                 SizedBox(width: 8),
                 Expanded(
                   child: TextFormField(
@@ -123,7 +130,7 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                       border: InputBorder.none,
                       hintText: hintText ?? 'Enter details',
                       hintStyle: TextStyle(
-                        color: Color(0xffa3a3a3),
+                        color: AppColors.textHint,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -148,7 +155,7 @@ class _InputNumberState extends ConsumerState<InputNumber> {
               padding: EdgeInsets.only(top: 4, left: 4),
               child: Text(
                 '    Enter Your $label',
-                style: TextStyle(color: Colors.red, fontSize: 12),
+                style: TextStyle(color: AppColors.textRequired, fontSize: 12),
               ),
             ),
         ],

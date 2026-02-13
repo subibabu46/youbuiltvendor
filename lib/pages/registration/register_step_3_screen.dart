@@ -4,6 +4,7 @@ import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/register_step_3_model.dart';
 import 'package:design_task_1/pages/home/home_screen.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/pages/registration/widgets/steps_bubbles.dart';
 import 'package:design_task_1/pages/registration/widgets/upload_file.dart';
@@ -49,7 +50,7 @@ class _RegisterStep3ScreenState extends ConsumerState<RegisterStep3Screen> {
                         Text(
                           'Registration',
                           style: TextStyle(
-                            color: Color(0xff2c2c2c),
+                            color: AppColors.textPrimary,
                             fontWeight: FontWeight.w700,
                             fontSize: 32,
                           ),

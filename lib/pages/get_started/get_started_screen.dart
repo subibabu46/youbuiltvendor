@@ -1,5 +1,6 @@
 import 'package:design_task_1/helpers/check_connection.dart';
-import 'package:design_task_1/pages/get_started/widgets/register_button.dart';
+import 'package:design_task_1/pages/get_started/widgets/register_type_button.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/providers/register_type_provider.dart';
 import 'package:design_task_1/pages/registration/send_otp_screen.dart';
@@ -32,7 +33,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xff2c2c2c),
+                  color: AppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 10),
@@ -41,11 +42,11 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
-                  color: Color(0xff737373),
+                  color: AppColors.textSecondary,
                 ),
               ),
               SizedBox(height: 60),
-              RegisterButton(
+              RegisterTypeButton(
                 title: 'Store Registration',
                 content: 'Register your store and list \nproducts',
                 image: 'assets/shop 1.png',
@@ -61,7 +62,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                 isPressed: selectedType == RegisterType.store,
               ),
               SizedBox(height: 24),
-              RegisterButton(
+              RegisterTypeButton(
                 title: 'Service Hub Registration',
                 content: 'Register your service and list your \nofferings',
                 image: 'assets/mechanic1 1.png',

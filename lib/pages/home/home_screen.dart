@@ -1,3 +1,4 @@
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,7 +25,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   'Home',
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    color: Colors.black,
+                    color: AppColors.textPrimary,
                   ),
                 ),
               ),

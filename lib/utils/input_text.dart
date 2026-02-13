@@ -1,3 +1,4 @@
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:flutter/material.dart';
 
 class InputText extends StatefulWidget {
@@ -43,7 +44,7 @@ class _InputTextState extends State<InputText> {
                 widget.isFieldRequired
                     ? TextSpan(
                         text: '*',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: AppColors.textRequired),
                       )
                     : TextSpan(),
               ],
@@ -61,10 +62,10 @@ class _InputTextState extends State<InputText> {
                   onChanged: widget.onChanged,
                   obscureText: !_isEyeVisible && widget.isPasswordMode,
                   decoration: InputDecoration(
-                    errorStyle: TextStyle(color: Colors.red),
+                    errorStyle: TextStyle(color: AppColors.textRequired),
                     hintText: widget.hintText ?? 'Enter details',
                     hintStyle: TextStyle(
-                      color: Color(0xffa3a3a3),
+                      color: AppColors.textHint,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -76,7 +77,7 @@ class _InputTextState extends State<InputText> {
                               });
                             },
                             icon: Icon(
-                              color: Color(0xffa3a3a3),
+                              color: AppColors.textHint,
                               _isEyeVisible
                                   ? Icons.visibility_outlined
                                   : Icons.visibility_off_outlined,
@@ -85,23 +86,27 @@ class _InputTextState extends State<InputText> {
                         : null,
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6),
-                      borderSide: BorderSide(color: Color(0xffc1c1c1)),
+                      borderSide: BorderSide(color: AppColors.borderNormal),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6),
-                      borderSide: BorderSide(color: Color(0xffc1c1c1)),
+                      borderSide: BorderSide(color: AppColors.borderNormal),
                     ),
                     disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6),
-                      borderSide: BorderSide(color: Color(0xffc1c1c1)),
+                      borderSide: BorderSide(color: AppColors.borderNormal),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6),
-                      borderSide: const BorderSide(color: Colors.red),
+                      borderSide: const BorderSide(
+                        color: AppColors.borderRequired,
+                      ),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6),
-                      borderSide: const BorderSide(color: Colors.red),
+                      borderSide: const BorderSide(
+                        color: AppColors.borderRequired,
+                      ),
                     ),
                   ),
                   validator: (value) {

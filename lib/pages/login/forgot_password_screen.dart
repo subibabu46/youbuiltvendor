@@ -1,4 +1,5 @@
 import 'package:design_task_1/pages/error/check_internet_screen.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/utils/input_number.dart';
 import 'package:design_task_1/providers/connectivity_provider.dart';
@@ -84,7 +85,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                             Text(
                               'Forgot \nPassword',
                               style: TextStyle(
-                                color: Color(0xff2c2c2c),
+                                color: AppColors.textPrimary,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 32,
                               ),
@@ -93,7 +94,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                             Text(
                               'Enter your registered phone number',
                               style: TextStyle(
-                                color: Color(0xff737373),
+                                color: AppColors.textSecondary,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16,
                               ),

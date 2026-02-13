@@ -2,6 +2,7 @@ import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/register_step_1_model.dart';
 import 'package:design_task_1/models/user_model.dart';
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/providers/register_type_provider.dart';
 import 'package:design_task_1/pages/registration/register_step_2_screen.dart';
@@ -52,12 +53,24 @@ class RegisterStep1Screen extends ConsumerStatefulWidget {
 class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
   final _formKey = GlobalKey<FormState>();
   final controllers = _RegisterStep1Controllers();
-  String? officialNumberCode, code, businessType;
+  String? officialNumberCode;
+  String? code;
+  String? businessType;
+  @override
+  void initState() {
+    controllers.ownerName.text = widget.userInfo.name;
+    controllers.phoneNumber.text = widget.userInfo.phoneNumber;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controllers.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    controllers.ownerName.text = widget.userInfo.name;
-    controllers.phoneNumber.text = widget.userInfo.phoneNumber;
     final countryCode = widget.userInfo.code;
     final businessTypesAsync = ref.watch(businessTypesProvider);
 
@@ -85,7 +98,7 @@ class _RegisterStep1ScreenState extends ConsumerState<RegisterStep1Screen> {
                           Text(
                             'Registration',
                             style: TextStyle(
-                              color: Color(0xff2c2c2c),
+                              color: AppColors.textPrimary,
                               fontWeight: FontWeight.w700,
                               fontSize: 32,
                             ),

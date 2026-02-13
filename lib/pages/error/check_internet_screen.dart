@@ -1,3 +1,4 @@
+import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/next_button.dart';
 import 'package:design_task_1/providers/connectivity_provider.dart';
 import 'package:design_task_1/utils/message_toast.dart';
@@ -28,7 +29,7 @@ class _CheckInternetScreen extends ConsumerState<CheckInternetScreen> {
                 'Check internet connection',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  color: Colors.black,
+                  color: AppColors.textCheckInternet,
                 ),
               ),
               SizedBox(height: 32),

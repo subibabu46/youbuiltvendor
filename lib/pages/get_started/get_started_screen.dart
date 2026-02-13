@@ -1,3 +1,4 @@
+import 'package:design_task_1/constants/asset_names.dart';
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/pages/get_started/widgets/register_type_button.dart';
 import 'package:design_task_1/utils/colors_utils.dart';
@@ -49,7 +50,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
               RegisterTypeButton(
                 title: 'Store Registration',
                 content: 'Register your store and list \nproducts',
-                image: 'assets/shop 1.png',
+                image: AssetNames.shop1,
                 width: 90,
                 height: 80,
                 onPressed: () {
@@ -65,7 +66,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
               RegisterTypeButton(
                 title: 'Service Hub Registration',
                 content: 'Register your service and list your \nofferings',
-                image: 'assets/mechanic1 1.png',
+                image: AssetNames.mechanic,
                 width: 77,
                 height: 80,
                 onPressed: () {

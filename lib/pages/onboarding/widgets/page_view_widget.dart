@@ -1,19 +1,20 @@
+import 'package:design_task_1/constants/asset_names.dart';
 import 'package:design_task_1/pages/onboarding/widgets/content.dart';
 import 'package:flutter/material.dart';
 
 const items = [
   [
-    'assets/splash1 1.png',
+    AssetNames.onboarding1,
     'Purchase',
     'Shop building materials \n& machinery with ease.',
   ],
   [
-    'assets/splash3 1.png',
+    AssetNames.onboarding2,
     'Services',
     'Book trusted construction \nservices anytime, anywhere.',
   ],
   [
-    'assets/splash2 1.png',
+    AssetNames.onboarding3,
     'Projects',
     'Manage your project, budget \n& tasks in one place.',
   ],

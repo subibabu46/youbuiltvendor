@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:design_task_1/constants/asset_names.dart';
 import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/models/user_model.dart';
-import 'package:design_task_1/pages/home/home_screen.dart';
+import 'package:design_task_1/pages/navigation_menu.dart';
+import 'package:design_task_1/pages/store/store_home_screen.dart';
 import 'package:design_task_1/pages/onboarding/onboarding_screen.dart';
 import 'package:design_task_1/pages/registration/register_step_1_screen.dart';
 import 'package:design_task_1/pages/registration/register_step_2_screen.dart';
@@ -55,7 +57,7 @@ class SplashScreen extends ConsumerWidget {
           if (accessTokenId != null) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const HomeScreen()),
+              MaterialPageRoute(builder: (_) => const NavigationMenu()),
             );
             return;
           }
@@ -78,7 +80,7 @@ class SplashScreen extends ConsumerWidget {
               } else if (registerLevel == 3 && accessTokenId != null) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const HomeScreen()),
+                  MaterialPageRoute(builder: (_) => const StoreHomeScreen()),
                 );
               }
             } else if (isUserInfo != null) {
@@ -114,7 +116,7 @@ class SplashScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Spacer(flex: 2),
-          Image.asset('assets/Final_web 2.png', width: 220, height: 220),
+          Image.asset(AssetNames.logo, width: 220, height: 220),
           Text(
             'VENDOR',
             style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
@@ -122,10 +124,7 @@ class SplashScreen extends ConsumerWidget {
           Spacer(),
           SizedBox(
             width: double.infinity,
-            child: Image.asset(
-              'assets/Group 1000004398.png',
-              fit: BoxFit.contain,
-            ),
+            child: Image.asset(AssetNames.splash, fit: BoxFit.contain),
           ),
         ],
       ),

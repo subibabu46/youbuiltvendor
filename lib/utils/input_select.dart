@@ -1,3 +1,4 @@
+import 'package:design_task_1/constants/asset_names.dart';
 import 'package:design_task_1/models/response_model.dart';
 import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +77,15 @@ class _InputSelectState extends State<InputSelect> {
                       data: (result) {
                         final data = result.data as List<GetModel>;
                         return DropdownButton<GetModel>(
+                          icon: Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Image.asset(
+                              AssetNames.arrowDown,
+                              width: 20,
+                              height: 20,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
                           hint: Text(
                             widget.hintText ?? 'Select details',
                             style: TextStyle(
@@ -84,7 +94,6 @@ class _InputSelectState extends State<InputSelect> {
                               color: AppColors.textHint,
                             ),
                           ),
-                          icon: Icon(Icons.keyboard_arrow_down),
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14,

@@ -17,7 +17,7 @@ class Content extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 33,
-            color: AppColors.textOnboardingTitle,
+            color: AppColors.textTitlePrimary,
           ),
         ),
         SizedBox(height: 10),

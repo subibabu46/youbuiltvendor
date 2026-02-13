@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:design_task_1/constants/asset_names.dart';
 import 'package:design_task_1/providers/file_picker_provider.dart';
 import 'package:design_task_1/utils/colors_utils.dart';
 import 'package:design_task_1/utils/message_toast.dart';
@@ -72,7 +73,7 @@ class _UploadFileState extends ConsumerState<UploadFile> {
                         width: 1,
                         color: AppColors.borderDefault,
                       ),
-                      color: AppColors.placeholderImage,
+                      color: AppColors.backgroundPlaceholder,
                     ),
                     child: selectedFile != null
                         ? ClipRRect(
@@ -134,7 +135,7 @@ class _UploadFileState extends ConsumerState<UploadFile> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (selectedFile == null)
-                        Image.asset('assets/Vector.png', width: 24, height: 24),
+                        Image.asset(AssetNames.upload, width: 24, height: 24),
                       SizedBox(width: 8),
                       Flexible(
                         child: Text(

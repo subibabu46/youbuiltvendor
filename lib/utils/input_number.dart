@@ -1,3 +1,4 @@
+import 'package:design_task_1/constants/asset_names.dart';
 import 'package:design_task_1/models/response_model.dart';
 import 'package:design_task_1/providers/store_provider.dart';
 import 'package:design_task_1/utils/colors_utils.dart';
@@ -82,8 +83,22 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: DropdownButton<String>(
+                        icon: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Image.asset(
+                            AssetNames.arrowDown,
+                            width: 20,
+                            height: 20,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
                         underline: SizedBox(),
                         value: widget.isEnabled ? selectedValue : widget.code,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: AppColors.textTitleSecondary,
+                        ),
                         items: codes.map((code) {
                           return DropdownMenuItem(
                             value: code.label,
@@ -115,11 +130,7 @@ class _InputNumberState extends ConsumerState<InputNumber> {
                   },
                 ),
                 SizedBox(width: 8),
-                Container(
-                  width: 1,
-                  height: 24,
-                  color: AppColors.dividerTextField,
-                ),
+                Container(width: 1, height: 24, color: AppColors.divider),
                 SizedBox(width: 8),
                 Expanded(
                   child: TextFormField(

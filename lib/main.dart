@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
         title: 'Youbuilt Vendor',
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
+          appBarTheme: AppBarThemeData(backgroundColor: Colors.white),
           fontFamily: 'Urbanist',
           textTheme: ThemeData.light().textTheme.copyWith(
             bodySmall: TextStyle(fontFamily: 'Urbanist'),

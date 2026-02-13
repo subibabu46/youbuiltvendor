@@ -50,7 +50,7 @@ class RegisterTypeButton extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 20,
-                      color: AppColors.textTitle,
+                      color: AppColors.textTitleSecondary,
                     ),
                   ),
                   SizedBox(height: 4),

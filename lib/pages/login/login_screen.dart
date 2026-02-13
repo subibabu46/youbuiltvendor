@@ -1,7 +1,7 @@
 import 'package:design_task_1/constants/shared_pref_names.dart';
 import 'package:design_task_1/helpers/check_connection.dart';
 import 'package:design_task_1/models/login_model.dart';
-import 'package:design_task_1/pages/home/home_screen.dart';
+import 'package:design_task_1/pages/navigation_menu.dart';
 import 'package:design_task_1/pages/login/forgot_password_screen.dart';
 import 'package:design_task_1/providers/shared_pref_provider.dart';
 import 'package:design_task_1/providers/store_provider.dart';
@@ -223,7 +223,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(builder: (context) => NavigationMenu()),
                     (route) => false,
                   );
                 }
